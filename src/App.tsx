@@ -3,6 +3,12 @@ import logo from "./logo.svg";
 import "./App.css";
 import { decryptResponse } from "./utils/decryptorUtil";
 import { getTopCompanies } from "./externalApis/levelsFyiClient";
+import { Route, Routes } from "react-router-dom";
+import Welcome from "./users/Welcome";
+import SignIn from "./users/SignIn";
+import SignUp from "./users/SignUp";
+import ForgotPassword from "./users/ForgotPassword";
+
 
 function App() {
   const test = () => {
@@ -19,23 +25,12 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>
-          <button onClick={() => testApiCall()}>Click me</button>
-        </p>
-      </header>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+      </Routes>
     </div>
   );
 }

@@ -1,29 +1,56 @@
-import { httpRequest } from "../utils/commonUtil";
+import commonUtil from "../utils/commonUtil";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 const API_URL = `${API_BASE}/api/v1`;
 
+enum Role {
+  ADMIN = "ADMIN",
+  SEEKER = "SEEKER",
+  RECRUITER = "RECRUITER",
+}
+
+export interface IUser {
+  firstname: string;
+  lastname: string;
+  username: string;
+  password: string;
+  email: string;
+  created_at: number;
+  updated_at: number;
+  role: Role;
+}
+
 export const login = async (user: any) => {
-  const response = await httpRequest(`${API_URL}/login`, "POST", {}, {}, user);
-  return response.data;
+  let method = "POST";
+  let url = `${API_URL}/login`;
+  const response = await commonUtil.httpRequest(url, method, {}, user);
+  return response;
 };
 
 export const register = async (user: any) => {
-  const response = await httpRequest(`${API_URL}/register`, "POST", {}, {}, user);
-  return response.data;
+  let method = "POST";
+  let url = `${API_URL}/register`;
+  const response = await commonUtil.httpRequest(url, method, {}, user);
+  return response;
 };
 
 export const updateUser = async (user: any) => {
-  const response = await httpRequest(`${API_URL}/users/${user._id}`, "PUT", {}, {}, user);
-  return response.data;
+  let method = "POST";
+  let url = `${API_URL}/users/${user._id}`;
+  const response = await commonUtil.httpRequest(url, method, {}, user);
+  return response;
 };
 
 export const getUsersByFilter = async (filters: any) => {
-  const response = await httpRequest(`${API_URL}/users`, "GET", {}, filters, {});
-  return response.data;
+  let method = "GET";
+  let url = `${API_URL}/users`;
+  const response = await commonUtil.httpRequest(url, method, {}, filters);
+  return response;
 };
 
 export const getUserById = async (userId: string) => {
-  const response = await httpRequest(`${API_URL}/users/${userId}`, "GET", {}, {}, {});
-  return response.data;
+  let method = "GET";
+  let url = `${API_URL}/users/${userId}`;
+  const response = await commonUtil.httpRequest(url, method, {}, {});
+  return response;
 };

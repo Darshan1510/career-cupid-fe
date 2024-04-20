@@ -9,34 +9,56 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import * as client from "./client";
+import commonUtil from "../utils/commonUtil";
+import { useNavigate } from "react-router-dom";
+import Copyright from "../components/common/Copyright";
+import { FormControl, FormLabel, Radio, RadioGroup } from "@mui/material";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  let [firstname, setFirstname] = React.useState();
+  let [lastname, setLastname] = React.useState();
+  let [password, setPassword] = React.useState();
+  let [email, setEmail] = React.useState();
+  let [role, setRole] = React.useState("RECRUITER");
+  let [username, setUsername] = React.useState();
+  let [usernameExists, setUsernameExists] = React.useState();
+  let navigate = useNavigate();
+
+  const handleCheckUsernameAvailibility = async () => {
+    const exists = await client.getUsersByFilter(new URLSearchParams(`username=${username}`));
+    if (exists) {
+      setUsernameExists(true);
+    } else {
+      setUsernameExists(false);
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    let user = {};
+    user["firstname"] = firstname;
+    user["lastname"] = lastname;
+    user["password"] = password;
+    user["email"] = email;
+    user["username"] = username;
+    user["role"] = role;
+
+    console.log(user);
+
+    let createdUser = await client.register(user);
+
+    if (createdUser) {
+      alert("Please verify your email to proceed further");
+    }
   };
 
   return (
@@ -68,6 +90,8 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  value={firstname || ""}
+                  onChange={(event) => setFirstname(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -78,8 +102,11 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  value={lastname || ""}
+                  onChange={(event) => setLastname(event.target.value)}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -88,6 +115,19 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={email || ""}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  value={username || ""}
+                  onChange={(event) => setUsername(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -99,13 +139,37 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password || ""}
+                  onChange={(event) => setPassword(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">Sign up as</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="RECRUITER"
+                    name="radio-buttons-group"
+                    value={role}
+                    onChange={(event) => setRole(event.target.value)}
+                  >
+                    <FormControlLabel value="RECRUITER" control={<Radio />} label="Recruiter" />
+                    <FormControlLabel value="SEEKER" control={<Radio />} label="Seeker" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <small className="text-secondary">
+                  By clicking “Sign up”, you agree to our{" "}
+                  <a href="/terms" target="_blank">
+                    terms of service
+                  </a>{" "}
+                  and{" "}
+                  <a href="privacy" target="_blank">
+                    privacy policy
+                  </a>
+                </small>
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

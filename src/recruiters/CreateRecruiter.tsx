@@ -1,21 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FormControl, InputAdornment, InputLabel, MenuItem, Select, Tooltip, FormHelperText } from "@mui/material";
+import { FormControl, InputAdornment, InputLabel, MenuItem, Select, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { createRecruiter } from "./client";
 
 const defaultTheme = createTheme();
 
 const RecruiterSignUp = () => {
+    const [countries, setCountries] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCountries = async () => {
+            try {
+                const response = await fetch("https://restcountries.com/v3.1/all");
+                const data = await response.json();
+                const formattedCountries = data.map((country: any) => ({
+                    code: country.cca2,
+                    name: country.name.common,
+                }));
+                setCountries(formattedCountries);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching countries:", error);
+            }
+        };
+
+        fetchCountries();
+    }, []);
+
     const [formData, setFormData] = useState({
         email: "",
         company: "",
@@ -62,8 +84,8 @@ const RecruiterSignUp = () => {
                         alignItems: "center",
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                        <LockOutlinedIcon />
+                    <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+                        <AssignmentIndIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Recruiter Approval Request Form
@@ -133,12 +155,14 @@ const RecruiterSignUp = () => {
                                         value={formData.country}
                                         label="Country"
                                         onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                                        disabled={loading}
                                     >
-                                        <MenuItem value="US">US</MenuItem>
-                                        <MenuItem value="IN">IN</MenuItem>
-                                        <MenuItem value="CA">CA</MenuItem>
+                                        {countries.map((country: any) => (
+                                            <MenuItem key={country.code} value={country.code}>
+                                                {country.name}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
-                                    <FormHelperText>Enter two-letter abbreviation for country</FormHelperText>
                                 </FormControl>
                             </Grid>
 

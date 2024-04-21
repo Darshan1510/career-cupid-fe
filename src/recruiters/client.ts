@@ -15,7 +15,7 @@ export interface IRecruiter {
 }
 
 export const createRecruiter = async (recruiter: any) => {
-    // TODO: Fetch the ID of the logged-in user from the session
+    // TODO: Fetch the ID of the logged-in user
     recruiter.user = "60f3b3b3b3b3b3b3b3b3b3b3";
     recruiter.created_at = Date.now();
     recruiter.approved = false;

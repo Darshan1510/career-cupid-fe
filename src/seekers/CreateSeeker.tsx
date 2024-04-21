@@ -11,7 +11,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createSeeker } from "./client";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Snackbar } from "@mui/material";
+import MuiAlert from '@mui/material/Alert';
 
 const defaultTheme = createTheme();
 
@@ -37,6 +38,10 @@ export default function CreateSeeker() {
 
         fetchCountries();
     }, []);
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
     const [formData, setFormData] = useState({
         user: "",
@@ -79,18 +84,32 @@ export default function CreateSeeker() {
         try {
             const createdSeeker = await createSeeker(updatedFormData);
             if (createdSeeker !== undefined) {
-                alert("Seeker profile completion successful!");
+                handleSnackbar("Seeker profile completion successful!", "success");
                 // TODO: Redirect to the dashboard or next step after successful profile completion
             }
         } catch (error) {
             console.error("Error completing seeker profile:", error);
-            // Handle error here, e.g., display error message to the user
-            alert("Error completing seeker profile. Please try again.");
+            handleSnackbar("Error completing seeker profile. Please try again.", "error");
         }
+    };
+
+    const handleSnackbar = (message: string, severity: "success" | "error") => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
     };
 
     return (
         <ThemeProvider theme={defaultTheme}>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <MuiAlert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box

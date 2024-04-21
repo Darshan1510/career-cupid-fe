@@ -4,11 +4,17 @@ import "./App.css";
 import { decryptResponse } from "./utils/decryptorUtil";
 import { getTopCompanies } from "./externalApis/levelsFyiClient";
 import { Route, Routes } from "react-router-dom";
-import Welcome from "./users/Welcome";
-import SignIn from "./users/SignIn";
-import SignUp from "./users/SignUp";
-import ForgotPassword from "./users/ForgotPassword";
-
+import Welcome from "./users/components/Welcome";
+import SignIn from "./users/components/SignIn";
+import SignUp from "./users/components/SignUp";
+import ForgotPassword from "./users/components/ForgotPassword";
+import SeekerDetailPage from "./public/pages/SeekerDetailPage";
+import RecruiterDetailPage from "./public/pages/RecruiterDetailPage";
+import WelcomePage from "./public/pages/WelcomePage";
+import SearchPage from "./public/pages/SearchPage";
+import SignInPage from "./users/pages/SignInPage";
+import SignUpPage from "./users/pages/SignUpPage";
+import Layout from "./layouts/ParentLayout";
 
 function App() {
   const test = () => {
@@ -24,14 +30,19 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-      </Routes>
-    </div>
+    <Layout>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/seekers/:username" element={<SeekerDetailPage />} />
+          <Route path="/recruiters/:username" element={<RecruiterDetailPage />} />
+        </Routes>
+      </div>
+    </Layout>
   );
 }
 

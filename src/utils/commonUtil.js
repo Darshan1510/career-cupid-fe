@@ -20,7 +20,6 @@ export async function httpRequest(url, method, headers = {}, params = {}) {
       ...headers,
       Accept: "application/json",
       Authorization: `Bearer ${tokenStr}`,
-      "Access-Control-Allow-Origin": "*",
       ...requestHeaders,
     },
     mode: "cors",
@@ -51,11 +50,9 @@ export async function httpRequest(url, method, headers = {}, params = {}) {
       case (400, 404):
         alert(res.message);
         return;
-        break;
       default:
         alert(res.message);
         return;
-        break;
     }
   }
 

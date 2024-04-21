@@ -9,6 +9,7 @@ import SignIn from "./users/SignIn";
 import SignUp from "./users/SignUp";
 import ForgotPassword from "./users/ForgotPassword";
 import CreateRecruiter from "./recruiters/CreateRecruiter";
+import CreateSeeker from "./seekers/CreateSeeker";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/create-recruiter" element={<CreateRecruiter />} />
+        <Route path="/create-seeker" element={<CreateSeeker />} />
       </Routes>
     </div>
   );

@@ -9,9 +9,10 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FormControl, InputAdornment, InputLabel, MenuItem, Select, Tooltip } from "@mui/material";
+import { FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Tooltip } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { createRecruiter } from "./client";
+import MuiAlert from '@mui/material/Alert';
 
 const defaultTheme = createTheme();
 
@@ -38,6 +39,10 @@ const RecruiterSignUp = () => {
         fetchCountries();
     }, []);
 
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+
     const [formData, setFormData] = useState({
         email: "",
         company: "",
@@ -63,17 +68,32 @@ const RecruiterSignUp = () => {
         try {
             const createdUser = await createRecruiter(formData);
             if (createdUser) {
-                alert("Thank you for filling out the form, we shall update you once you are approved/rejected.");
+                handleSnackbar("Thank you for filling out the form, we shall update you once you are approved/rejected.", "success");
             }
         } catch (error) {
             console.error("Error registering user:", error);
-            // Handle error here, e.g., display error message to the user
-            alert("Error registering user. Please try again.");
+            handleSnackbar("Error registering user. Please try again.", "error");
         }
     };
+    const handleSnackbar = (message: string, severity: "success" | "error") => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
+
 
     return (
         <ThemeProvider theme={defaultTheme}>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <MuiAlert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box

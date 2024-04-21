@@ -4,9 +4,6 @@ import "./App.css";
 import { decryptResponse } from "./utils/decryptorUtil";
 import { getTopCompanies } from "./externalApis/levelsFyiClient";
 import { Route, Routes } from "react-router-dom";
-import Welcome from "./users/components/Welcome";
-import SignIn from "./users/components/SignIn";
-import SignUp from "./users/components/SignUp";
 import ForgotPassword from "./users/components/ForgotPassword";
 import SeekerDetailPage from "./public/pages/SeekerDetailPage";
 import RecruiterDetailPage from "./public/pages/RecruiterDetailPage";
@@ -15,6 +12,10 @@ import SearchPage from "./public/pages/SearchPage";
 import SignInPage from "./users/pages/SignInPage";
 import SignUpPage from "./users/pages/SignUpPage";
 import Layout from "./layouts/ParentLayout";
+import CreateRecruiter from "./recruiters/CreateRecruiter";
+import CreateSeeker from "./seekers/CreateSeeker";
+
+import CreateJobPosting from "./jobPostings/jobPosting";
 
 function App() {
   const test = () => {
@@ -40,6 +41,10 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/seekers/:username" element={<SeekerDetailPage />} />
           <Route path="/recruiters/:username" element={<RecruiterDetailPage />} />
+          <Route path="/jobPosting" element={<CreateJobPosting />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/create-recruiter" element={<CreateRecruiter />} />
+          <Route path="/create-seeker" element={<CreateSeeker />} />
         </Routes>
       </div>
     </Layout>

@@ -4,23 +4,20 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Work from "@mui/icons-material/Work";
 
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as client from "./client";
-import commonUtil from "../utils/commonUtil";
 import { useNavigate } from "react-router-dom";
 import Copyright from "../components/common/Copyright";
-import { Autocomplete, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
-import { AnyARecord } from "dns";
+import { Autocomplete, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Snackbar } from "@mui/material";
 import { useEffect } from "react";
+import { error } from "console";
+import MuiAlert from '@mui/material/Alert';
 
 
 interface JobPosting {
@@ -62,7 +59,10 @@ export default function CreateJobPosting() {
   let [updatedAt, setUpdatedAt] = React.useState<number>(Date.now());
   let [skills, setSkills] =  React.useState<string[]>([]);
   let [experience, setExperience] =  React.useState(0);
-
+  
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState<"success" | "error">("success");
   const [countries, setCountries] = React.useState([]);
   
   let navigate = useNavigate();
@@ -93,13 +93,24 @@ export default function CreateJobPosting() {
     console.log(jobPosting);
 
     try {
-     
-      let response = await client.createJobPosting(jobPosting);
-
-    } catch (error) {
+      const response = await client.createJobPosting(jobPosting);
+      if (response) {
+        handleSnackbar("Congratulations, the job has been posted.", "success");
+    } 
+  } catch (error) {
+      handleSnackbar("Error posting the job. Please try again.","error");
       console.error("Oops, there was an error:", error);
     }
     
+  };
+  const handleSnackbar = (message: string, severity: "success" | "error") => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+      setSnackbarOpen(false);
   };
   const industryOptions = [
     "Technology",
@@ -134,6 +145,11 @@ export default function CreateJobPosting() {
   return (
 
     <ThemeProvider theme={defaultTheme}>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <MuiAlert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
       <Container component="main" maxWidth="xs">
         <CssBaseline /> 
         <Box

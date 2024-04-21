@@ -12,14 +12,14 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as client from "./client";
-import commonUtil from "../utils/commonUtil";
+import * as client from "../client";
+import commonUtil from "../../utils/commonUtil";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, IconButton, Radio, RadioGroup } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
-import Copyright from "../components/common/Copyright";
+import Copyright from "../../components/common/Copyright";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -38,9 +38,9 @@ export default function SignIn() {
     let session = await client.login({
       email: email,
       password: password,
-      role: role
+      role: role,
     });
-  
+
     if (session) {
       saveLoginToken(session);
     }
@@ -116,7 +116,7 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="current-password"
               InputProps={{

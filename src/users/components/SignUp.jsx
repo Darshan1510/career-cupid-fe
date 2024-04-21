@@ -13,11 +13,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as client from "./client";
-import commonUtil from "../utils/commonUtil";
+import * as client from "../client";
+import commonUtil from "../../utils/commonUtil";
 import { useNavigate } from "react-router-dom";
-import Copyright from "../components/common/Copyright";
+import Copyright from "../../components/common/Copyright";
 import { FormControl, FormLabel, Radio, RadioGroup } from "@mui/material";
+import useLoading from "../../hooks/useLoading";
+import Spinner from "../../components/common/Spinner";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -31,6 +33,7 @@ export default function SignUp() {
   let [username, setUsername] = React.useState();
   let [usernameExists, setUsernameExists] = React.useState();
   let navigate = useNavigate();
+  const [loading, withLoading] = useLoading();
 
   const handleCheckUsernameAvailibility = async () => {
     const exists = await client.getUsersByFilter(new URLSearchParams(`username=${username}`));
@@ -54,7 +57,7 @@ export default function SignUp() {
 
     console.log(user);
 
-    let createdUser = await client.register(user);
+    let createdUser = await withLoading(client.register, user);
 
     if (createdUser) {
       alert("Please verify your email to proceed further");
@@ -63,6 +66,7 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      {loading && <Spinner loading={loading} />}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

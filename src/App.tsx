@@ -8,6 +8,7 @@ import Welcome from "./users/Welcome";
 import SignIn from "./users/SignIn";
 import SignUp from "./users/SignUp";
 import ForgotPassword from "./users/ForgotPassword";
+import CreateRecruiter from "./recruiters/CreateRecruiter";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/create-recruiter" element={<CreateRecruiter />} />
       </Routes>
     </div>
   );

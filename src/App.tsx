@@ -9,6 +9,8 @@ import SignIn from "./users/SignIn";
 import SignUp from "./users/SignUp";
 import ForgotPassword from "./users/ForgotPassword";
 
+import CreateJobPosting from "./jobPostings/jobPosting";
+
 
 function App() {
   const test = () => {
@@ -29,6 +31,7 @@ function App() {
         <Route path="/" element={<Welcome />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/jobPosting" element={< CreateJobPosting/>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </div>

@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { decryptResponse } from "./utils/decryptorUtil";
 import { getTopCompanies } from "./externalApis/levelsFyiClient";
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ForgotPassword from "./users/components/ForgotPassword";
 import SeekerDetailPage from "./public/pages/SeekerDetailPage";
 import RecruiterDetailPage from "./public/pages/RecruiterDetailPage";
@@ -31,23 +31,25 @@ function App() {
   };
 
   return (
-    <Layout>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<WelcomePage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/seekers/:username" element={<SeekerDetailPage />} />
-          <Route path="/recruiters/:username" element={<RecruiterDetailPage />} />
-          <Route path="/jobPosting" element={<CreateJobPosting />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/create-recruiter" element={<CreateRecruiter />} />
-          <Route path="/create-seeker" element={<CreateSeeker />} />
-        </Routes>
-      </div>
-    </Layout>
+    <div className="App">
+      <Layout>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<WelcomePage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/seekers/:username" element={<SeekerDetailPage />} />
+            <Route path="/recruiters/:username" element={<RecruiterDetailPage />} />
+            <Route path="/jobPosting" element={<CreateJobPosting />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/create-recruiter" element={<CreateRecruiter />} />
+            <Route path="/create-seeker" element={<CreateSeeker />} />
+          </Routes>
+        </BrowserRouter>
+      </Layout>
+    </div>
   );
 }
 

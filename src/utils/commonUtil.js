@@ -103,9 +103,11 @@ const getLoginTokens = () => {
   return [];
 };
 
-export default {
+let commonUtil = {
   httpRequest,
   setLoginToken,
   getLoginTokens,
   logout,
 };
+
+export default commonUtil;

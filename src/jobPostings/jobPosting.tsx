@@ -18,8 +18,9 @@ import * as client from "./client";
 import commonUtil from "../utils/commonUtil";
 import { useNavigate } from "react-router-dom";
 import Copyright from "../components/common/Copyright";
-import { Autocomplete, FormControl, FormLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
+import { Autocomplete, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import { AnyARecord } from "dns";
+import { useEffect } from "react";
 
 
 interface JobPosting {
@@ -61,8 +62,8 @@ export default function CreateJobPosting() {
   let [updatedAt, setUpdatedAt] = React.useState<number>(Date.now());
   let [skills, setSkills] =  React.useState<string[]>([]);
   let [experience, setExperience] =  React.useState(0);
-  let [successMessage, setSuccessMessage] = React.useState("");
-  let [errorMessage, setErrorMessage] = React.useState("");
+
+  const [countries, setCountries] = React.useState([]);
   
   let navigate = useNavigate();
 
@@ -94,22 +95,9 @@ export default function CreateJobPosting() {
     try {
      
       let response = await client.createJobPosting(jobPosting);
-  
-      if (response && response.status === 200) {
-        
-        setSuccessMessage("Job successfully posted");
-        
-      } else {
-       
-        setErrorMessage("Oops, there was an error");
-      
 
-      }
     } catch (error) {
       console.error("Oops, there was an error:", error);
-     
-      setErrorMessage("Oops, there was an error");
-
     }
     
   };
@@ -124,8 +112,25 @@ export default function CreateJobPosting() {
     "Hospitality",
     "Automotive",
   ];
-    
 
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+        try {
+            const response = await fetch("https://restcountries.com/v3.1/all");
+            const data = await response.json();
+            const formattedCountries = data.map((country: any) => ({
+                code: country.cca2,
+                name: country.name.common,
+            }));
+            setCountries(formattedCountries);
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+        }
+    };
+
+    fetchCountries();
+}, []);
   return (
 
     <ThemeProvider theme={defaultTheme}>
@@ -184,18 +189,7 @@ export default function CreateJobPosting() {
                   onChange={(event) => setDescription(event.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="salary"
-                  label="Salary"
-                  type="number"
-                  value={salary === 0 ? '' : salary}
-                  onChange={(event) => setSalary(Number(event.target.value))}
-                />
-              </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   required
                   fullWidth
@@ -206,7 +200,7 @@ export default function CreateJobPosting() {
                   onChange={(event) => setCity(event.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   required
                   fullWidth
@@ -218,18 +212,25 @@ export default function CreateJobPosting() {
                   onChange={(event) => setState(event.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="country"
-                  label="country"
-                  type="country"
-                  id="country"
-                  value={country || ""}
-                  onChange={(event) => setCountry(event.target.value)}
-                />
-            </Grid>
+
+            <Grid item xs={12} sm={4}>
+            <FormControl fullWidth required>
+                <InputLabel id="country-label">Country</InputLabel>
+                <Select
+                    labelId="country-label"
+                    id="country"
+                    value={country || ""}
+                    label="Country"
+                    onChange={(e) => setCountry( e.target.value )}
+                    >
+                    {countries.map((country: any) => (
+                        <MenuItem key={country.code} value={country.code}>
+                            {country.name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        </Grid>
             <Grid item xs={12}>
                 <Autocomplete
                   id="industry"
@@ -245,11 +246,24 @@ export default function CreateJobPosting() {
                 <TextField
                   required
                   fullWidth
+                  id="salary"
+                  label="Salary"
+                  type="number"
+                  value={salary === 0 ? '' : salary}
+                  onChange={(event) => setSalary(Number(event.target.value))}
+                  inputProps={{ min: 0 }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
                   id="openings"
                   label="Openings"
                   type="number"
                   value={openings === 0 ? '' : openings}
                   onChange={(event) => setOpenings(Number(event.target.value))}
+                  inputProps={{ min: 0 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -261,6 +275,7 @@ export default function CreateJobPosting() {
                   type="number"
                   value={experience === 0 ? '' : experience}
                   onChange={(event) => setExperience(Number(event.target.value))}
+                  inputProps={{ min: 0 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -274,7 +289,7 @@ export default function CreateJobPosting() {
               />
               </Grid>
               <Grid item xs={12}>
-              <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',gap:'10px' }}>
                 <FormLabel id="demo-radio-buttons-group-label" sx={{ marginRight: '16px' }}>Remote Job</FormLabel>
                 <RadioGroup
                   row
@@ -290,7 +305,7 @@ export default function CreateJobPosting() {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-            <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' , gap:'20px'}}>
               <FormLabel id="hybrid-job-label" sx={{ marginRight: '16px' }}>Hybrid Job</FormLabel>
               <RadioGroup
                 row
@@ -300,8 +315,10 @@ export default function CreateJobPosting() {
                 value={hybrid.toString()} 
                 onChange={(event) => setHybrid(event.target.value === "true")}
               >
+                <div style={{ display: 'flex', alignItems: 'center'}}>
                 <FormControlLabel value="false" control={<Radio />} label="No" />
                 <FormControlLabel value="true" control={<Radio />} label="Yes" />
+                </div>
               </RadioGroup>
             </FormControl>
           </Grid>

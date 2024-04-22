@@ -34,3 +34,10 @@ export const createSeeker = async (seeker: any) => {
     const response = await commonUtil.httpRequest(url, method, {}, seeker);
     return response;
 };
+
+export const getSeekers = async () => {
+    let method = "GET";
+    let url = `${API_URL}/seekers`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+};

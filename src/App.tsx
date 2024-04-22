@@ -14,6 +14,7 @@ import SignUpPage from "./users/pages/SignUpPage";
 import Layout from "./layouts/ParentLayout";
 import CreateRecruiter from "./recruiters/CreateRecruiter";
 import CreateSeeker from "./seekers/CreateSeeker";
+import SeekJobs from "./seekers/SeekJobs";
 
 import CreateJobPosting from "./jobPostings/jobPosting";
 
@@ -46,6 +47,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/create-recruiter" element={<CreateRecruiter />} />
             <Route path="/create-seeker" element={<CreateSeeker />} />
+            <Route path="/seek-jobs" element={<SeekJobs />} />
           </Routes>
         </BrowserRouter>
       </Layout>

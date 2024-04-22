@@ -18,8 +18,11 @@ export interface ISeeker {
 }
 
 export const createSeeker = async (seeker: any) => {
-    // TODO: Fetch the ID of the logged-in user from the session
-    seeker.user = "662461aec443feceb60432b1";
+    let CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
+    const id = CC_LOGIN_TOKENS[0];
+    const key = Object.keys(id)[0];
+
+    seeker.user = key;
     seeker.created_at = Date.now();
     let method = "POST";
     let url = `${API_URL}/seekers`;

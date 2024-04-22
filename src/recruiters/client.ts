@@ -15,8 +15,11 @@ export interface IRecruiter {
 }
 
 export const createRecruiter = async (recruiter: any) => {
-    // TODO: Fetch the ID of the logged-in user
-    recruiter.user = "60f3b3b3b3b3b3b3b3b3b3b3";
+    let CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
+    const id = CC_LOGIN_TOKENS[0];
+    const key = Object.keys(id)[0];
+
+    recruiter.user = key;
     recruiter.created_at = Date.now();
     recruiter.approved = false;
     let method = "POST";

@@ -22,10 +22,15 @@ export const createSeeker = async (seeker: any) => {
     const id = CC_LOGIN_TOKENS[0];
     const key = Object.keys(id)[0];
 
+    let method = "GET";
+    let url = `${API_URL}/users/${key}`;
+    const user: any = await commonUtil.httpRequest(url, method, {}, {});
+
     seeker.user = key;
+    seeker.email = user.email;
     seeker.created_at = Date.now();
-    let method = "POST";
-    let url = `${API_URL}/seekers`;
+    method = "POST";
+    url = `${API_URL}/seekers`;
     const response = await commonUtil.httpRequest(url, method, {}, seeker);
     return response;
 };

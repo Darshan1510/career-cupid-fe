@@ -26,3 +26,18 @@ export const createSeeker = async (seeker: any) => {
     const response = await commonUtil.httpRequest(url, method, {}, seeker);
     return response;
 };
+
+export const getSeekerById = async (seekerId: string) => {
+    let method = "GET";
+    let url = `${API_URL}/seekers/${seekerId}`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+  };
+
+  export const getSeekersByFilter = async (filters: any) => {
+    let method = "GET";
+    let url = `${API_URL}/seekers?${filters}`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+  };
+  

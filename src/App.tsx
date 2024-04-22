@@ -16,6 +16,8 @@ import CreateRecruiter from "./recruiters/CreateRecruiter";
 import CreateSeeker from "./seekers/CreateSeeker";
 
 import CreateJobPosting from "./jobPostings/jobPosting";
+import SeekerDetail from "./public/components/SeekerDetail";
+
 
 function App() {
   const test = () => {
@@ -46,6 +48,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/create-recruiter" element={<CreateRecruiter />} />
             <Route path="/create-seeker" element={<CreateSeeker />} />
+            <Route path="/seekerDetail" element={<SeekerDetail />} />
           </Routes>
         </BrowserRouter>
       </Layout>

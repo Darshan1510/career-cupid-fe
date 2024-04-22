@@ -23,18 +23,6 @@ export default function SeekerDetail() {
   const [firstName,setFirstName] = React.useState("");
   const [lastName,setLastName] = React.useState("");
 
-
-  function decodeJWT(token) {
-   
-    const [headerEncoded, payloadEncoded, signature] = token.split('.');
-  
-   
-    const header = JSON.parse(atob(headerEncoded));
-    const payload = JSON.parse(atob(payloadEncoded));
-
-    return { header, payload };
-  }
-  
   useEffect(() => {
     async function fetchData() {
       try {

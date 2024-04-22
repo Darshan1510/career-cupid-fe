@@ -17,6 +17,7 @@ import CreateSeeker from "./seekers/CreateSeeker";
 
 import CreateJobPosting from "./jobPostings/jobPosting";
 import SeekerDetail from "./public/components/SeekerDetail";
+import RecruiterDetail from "./public/components/RecruiterDetail";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
             <Route path="/create-recruiter" element={<CreateRecruiter />} />
             <Route path="/create-seeker" element={<CreateSeeker />} />
             <Route path="/seekerDetail" element={<SeekerDetail />} />
+            <Route path="/recruiterDetail" element={<RecruiterDetail />} />
           </Routes>
         </BrowserRouter>
       </Layout>

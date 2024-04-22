@@ -19,11 +19,16 @@ export const createRecruiter = async (recruiter: any) => {
     const id = CC_LOGIN_TOKENS[0];
     const key = Object.keys(id)[0];
 
+    let method = "GET";
+    let url = `${API_URL}/users/${key}`;
+    const user: any = await commonUtil.httpRequest(url, method, {}, {});
+
     recruiter.user = key;
+    recruiter.email = user.email;
     recruiter.created_at = Date.now();
     recruiter.approved = false;
-    let method = "POST";
-    let url = `${API_URL}/recruiters`;
+    method = "POST";
+    url = `${API_URL}/recruiters`;
     const response = await commonUtil.httpRequest(url, method, {}, recruiter);
     return response;
 };

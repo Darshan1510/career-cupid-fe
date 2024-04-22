@@ -45,7 +45,6 @@ export default function CreateSeeker() {
 
     const [formData, setFormData] = useState({
         user: "",
-        email: "",
         city: "",
         state: "",
         country: "",
@@ -128,18 +127,6 @@ export default function CreateSeeker() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     required

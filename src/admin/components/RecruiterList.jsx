@@ -25,6 +25,24 @@ export default function RecruiterList() {
     })();
   }, []);
 
+  const onSearchHandler = async (keyword) => {
+    let recruiters = await recruiterClient.getRecruitersByFilter(
+      new URLSearchParams(`keyword=${keyword}`)
+    );
+    let userIds = recruiters.map((recruiter) => recruiter.user);
+    let users = await userClient.getUsersByFilter(
+      new URLSearchParams(`userIds=${userIds.join(",")}`)
+    );
+    let userMap = {};
+    users.forEach((user) => (userMap[user._id] = user));
+    let recruiterList = recruiters.map((recruiter) => {
+      let user = userMap[recruiter.user];
+      delete user._id;
+      return { ...recruiter, ...user };
+    });
+    setRecruiters(recruiterList);
+  };
+
   const onApprove = async (recruiter) => {
     let updatedRecruiter = await recruiterClient.approveRecruiter(recruiter._id);
     if (updatedRecruiter) {
@@ -38,6 +56,15 @@ export default function RecruiterList() {
   return (
     <div className="container">
       <h2 className="text-center mb-4">Recruiters</h2>
+      <div className="col-md-12">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search by name, email, company, location, website"
+          onChange={(e) => onSearchHandler(e.target.value)}
+        />
+      </div>
+      <br />
       <div className="row">
         {recruiters && recruiters.length > 0 ? (
           recruiters.map((recruiter, index) => (
@@ -55,7 +82,7 @@ export default function RecruiterList() {
 
 const RecruiterProfile = ({ recruiter, onApprove }) => {
   return (
-    <Card sx={{ maxWidth: 600, marginBottom: 2, height: "100%" }}>
+    <Card sx={{ marginBottom: 2, height: "100%" }}>
       <CardContent>
         <div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
           <Avatar src={recruiter.profile_picture} alt={recruiter.email} />

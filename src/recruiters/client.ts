@@ -40,3 +40,11 @@ export const getSeekers = async () => {
     const response = await commonUtil.httpRequest(url, method, {}, {});
     return response;
 };
+
+export const shortlistSeeker = async (seekerId: any) => {
+    let method = "POST";
+    const jobId = "66244808511633a3e517c68c";
+    let url = `${API_URL}/jobPostings/${jobId}/shortlistApplicant`;
+    const response = await commonUtil.httpRequest(url, method, {}, { applicantId: seekerId });
+    return response;
+}

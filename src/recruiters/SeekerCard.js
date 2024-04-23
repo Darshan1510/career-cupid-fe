@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
-import { getSeekers } from "./client";
+import { getSeekers, shortlistSeeker } from "./client";
 
 function SeekerCard() {
     const [seekers, setSeekers] = useState([]);
@@ -41,7 +41,14 @@ function SeekerCard() {
     const canSwipe = currentIndex >= 0;
 
     // set last direction and decrease current index
-    const swiped = (direction, nameToDelete, index) => {
+    const swiped = (direction, nameToDelete, index, seekerId) => {
+        // If the swipe was right, add the user to the shortlisted candidates
+        if (direction === 'right') {
+            shortlistSeeker(seekerId);
+        } else {
+            console.log('You rejected:', nameToDelete);
+        }
+
         setLastDirection(direction);
         updateCurrentIndex(index - 1);
     };
@@ -85,7 +92,7 @@ function SeekerCard() {
                         ref={childRefs[index]}
                         className='swipe'
                         key={character.email}
-                        onSwipe={(dir) => swiped(dir, character.name, index)}
+                        onSwipe={(dir) => swiped(dir, character.name, index, character._id)}
                         onCardLeftScreen={() => outOfFrame(character.name, index)}
                     >
                         <br />
@@ -98,7 +105,6 @@ function SeekerCard() {
                             </div>
                             <br />
                             <div style={{ textAlign: 'left', backgroundColor: 'lightgrey' }}>
-                                {/* Job titles should be separated by comma */}
                                 <h4>{character.firstname} {character.lastname}</h4>
                                 <h5>Seeking roles: {character.job_titles.join(", ")}</h5>
                                 <h5>Email: <a target='blank' href={`mailto:${character.email}`}>{character.email}</a></h5>

@@ -50,6 +50,10 @@ export default function Header() {
     }
   };
 
+  const accountUrl = getAccountUrl();
+
+  const profileUrl = getProfileUrl();
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -103,12 +107,12 @@ export default function Header() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>
-        <a href={getProfileUrl} style={{ textDecoration: "none" }}>
+        <a href={profileUrl} style={{ textDecoration: "none" }}>
           Profile
         </a>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <a href={getAccountUrl} style={{ textDecoration: "none" }}>
+        <a href={accountUrl} style={{ textDecoration: "none" }}>
           My account
         </a>
       </MenuItem>
@@ -134,12 +138,12 @@ export default function Header() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleProfileMenuOpen}>
-        <a href={getProfileUrl} style={{ textDecoration: "none" }}>
+        <a href={profileUrl} style={{ textDecoration: "none" }}>
           Profile
         </a>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
-        <a href={getAccountUrl} style={{ textDecoration: "none" }}>
+        <a href={accountUrl} style={{ textDecoration: "none" }}>
           My account
         </a>
       </MenuItem>

@@ -12,9 +12,25 @@ export default function JobPostingList() {
     })();
   }, []);
 
+  const onSearchHandler = async (keyword) => {
+    let jobPostings = await client.getJobPostingsByFilter(
+      new URLSearchParams(`keyword=${keyword}`)
+    );
+    setJobPostings(jobPostings);
+  };
+
   return (
     <div className="container">
       <h2 className="text-center mb-4">Job Postings</h2>
+      <div>
+        <input
+          type="text"
+          placeholder="Search by name, company, location, Industry, Skills, etc."
+          className="form-control"
+          onChange={(e) => onSearchHandler(e.target.value)}
+        />
+      </div>
+      <br />
       <div className="row">
         {jobPostings && jobPostings.length > 0 ? (
           jobPostings.map((job, index) => (
@@ -32,7 +48,7 @@ export default function JobPostingList() {
 
 const JobPosting = ({ job }) => {
   return (
-    <Card sx={{ maxWidth: 600, marginBottom: 2, height: "100%" }}>
+    <Card sx={{ marginBottom: 2, height: "100%" }}>
       <CardContent>
         <div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
           <Avatar src={job.company_logo} alt={job.company} />

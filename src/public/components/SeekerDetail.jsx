@@ -37,34 +37,39 @@ export default function SeekerDetail({username}) {
           console.log("key", user_id);
         } else {
           console.error("Not enough tokens present in auth");
-          return;
+          
         }
+          const userParams = {
+            username: username,
+          };
+          const userQueryString = new URLSearchParams(userParams);
 
-        if (user_id) {
-          let userResponse = await userClient.getUserById(user_id);
-          console.log(user_id);
+          let userResponse = await userClient.getUsersByFilter(userQueryString);
 
-          if (userResponse && userResponse._id === user_id) {
+          console.log("userResponse",userResponse);
+          if (userResponse) {
             const queryParams = {
-              user: user_id,
+              user: userResponse[0]._id,
             };
-            const queryString = new URLSearchParams(queryParams).toString();
+            
+            const queryString = new URLSearchParams(queryParams);
 
             let seekerResponse = await seekerClient.getSeekersByFilter(
               queryString
             );
+            console.log("user_id",user_id);           
+             console.log("user_id2",userResponse[0]._id);
 
-            if(username && username===userResponse.username) {
+
+            if(user_id===userResponse[0]._id) {
               setUserBool(true);
             }
-           
+          
             setSeekerData(seekerResponse[0]);
-            setFirstName(userResponse.firstname);
-            setLastName(userResponse.lastname);
+            setFirstName(userResponse[0].firstname);
+            setLastName(userResponse[0].lastname);
             console.log(seekerData);
-
           }
-        }
         
 
         

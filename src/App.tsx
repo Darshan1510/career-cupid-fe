@@ -17,6 +17,7 @@ import CreateSeeker from "./seekers/CreateSeeker";
 import SeekJobs from "./seekers/SeekJobs";
 
 import CreateJobPosting from "./jobPostings/jobPosting";
+import ReviewApplications from "./recruiters/ReviewApplications";
 
 function App() {
   const test = () => {
@@ -48,6 +49,7 @@ function App() {
             <Route path="/create-recruiter" element={<CreateRecruiter />} />
             <Route path="/create-seeker" element={<CreateSeeker />} />
             <Route path="/seek-jobs" element={<SeekJobs />} />
+            <Route path="/review-applications" element={<ReviewApplications />} />
           </Routes>
         </BrowserRouter>
       </Layout>

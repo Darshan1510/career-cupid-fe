@@ -35,9 +35,10 @@ export const createSeeker = async (seeker: any) => {
     return response;
 };
 
-export const getSeekers = async () => {
+// Get job postings (TODO: get only the ones where the seeker did not apply so far)
+export const getJobPostings = async () => {
     let method = "GET";
-    let url = `${API_URL}/seekers`;
+    let url = `${API_URL}/jobPostings`;
     const response = await commonUtil.httpRequest(url, method, {}, {});
     return response;
 };

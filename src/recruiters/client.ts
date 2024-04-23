@@ -32,3 +32,11 @@ export const createRecruiter = async (recruiter: any) => {
     const response = await commonUtil.httpRequest(url, method, {}, recruiter);
     return response;
 };
+
+// Get a list of seekers who have applied for the job posted by the currently logged in recruiter
+export const getSeekers = async () => {
+    let method = "GET";
+    let url = `${API_URL}/seekers`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+};

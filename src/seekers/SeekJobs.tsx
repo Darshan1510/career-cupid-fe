@@ -1,10 +1,10 @@
 import './SeekJobs.css'
-import SeekerCard from './SeekerCard'
+import JobPostingCard from './JobPostingCard'
 
 function SeekJobs() {
     return (
         <div className='app'>
-            <SeekerCard />
+            <JobPostingCard />
         </div>
     )
 }

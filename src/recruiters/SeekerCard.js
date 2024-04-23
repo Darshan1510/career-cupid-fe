@@ -2,29 +2,6 @@ import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
 import { getSeekers } from "./client";
 
-// const db = [
-//     {
-//         name: 'Richard Hendricks',
-//         url: 'https://i.insider.com/57be1768ce38f236008b8c29?width=827&format=jpeg'
-//     },
-//     {
-//         name: 'Erlich Bachman',
-//         url: 'https://i.insider.com/57be1768ce38f236008b8c29?width=827&format=jpeg'
-//     },
-//     {
-//         name: 'Monica Hall',
-//         url: 'https://i.insider.com/57be1768ce38f236008b8c29?width=827&format=jpeg'
-//     },
-//     {
-//         name: 'Jared Dunn',
-//         url: 'https://i.insider.com/57be1768ce38f236008b8c29?width=827&format=jpeg'
-//     },
-//     {
-//         name: 'Dinesh Chugtai',
-//         url: 'https://i.insider.com/57be1768ce38f236008b8c29?width=827&format=jpeg'
-//     }
-// ];
-
 function SeekerCard() {
     const [seekers, setSeekers] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(seekers.length - 1);

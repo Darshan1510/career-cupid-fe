@@ -8,11 +8,9 @@ import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import { Grid, Box, Typography, Avatar, Card, CardContent, Chip, CardHeader, Link, IconButton,CardActions } from "@mui/material";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import GroupIcon from '@mui/icons-material/Group';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 
@@ -91,35 +89,54 @@ export default function SeekerDashboard() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline />
-        {/* <Grid container spacing={2} alignItems="center" pt={5}> */}
+
           <Grid item xs={12} sm={6} md={4} lg={4}>
-          <Card raised="true" style={{ padding: "40px", height: "100%" }}>
+          <Card raised="true" style={{ padding: "40px", height: "100%",marginTop:4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar 
-                sx={{ height: "120px", width: "120px", margin: "auto" }}
+                sx={{ height: "120px", width: "120px" }}
                 src={seekerData && seekerData.profile_picture}
               />
-              <CardContent>             
-              <Typography gutterBottom variant="h5" component="div">
-               {firstName} {lastName}
-               </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginLeft:'65px' }}>
-                  <LocationOnOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} /> 
-                  <Typography variant="body2" color="text.secondary">
-                    {seekerData && seekerData.city}, {seekerData && seekerData.state}, {seekerData && seekerData.country}
-                  </Typography>
-                </Box>
+              <CardHeader title={firstName+' '+lastName} subheader={
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <LocationOnOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} />
+                      {`${seekerData.city}, ${seekerData.state}, ${seekerData.country}`}
+                    </Box>
+                  }/>
+            </Box>
+              <CardContent>            
                 <Box sx={{ mt: 2, width: '100%' }}> 
                 <Typography variant="body2" color="text.secondary" textAlign="justify">
                   {seekerData && seekerData.bio}
                 </Typography>
               </Box>
           </CardContent>
+          <CardActions>
+                    <IconButton href="/recruiters/edit">  
+                      <EditNoteOutlinedIcon /> 
+                    </IconButton>
+              </CardActions>
             </Card>
           </Grid>
+          <Typography sx={{paddingTop:2,marginLeft:1}} variant="h5">Jobs Applied</Typography>
+          <Grid container spacing={2} alignItems="left" pt={3}>
           {jobPostingFormData.map((jobPosting, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
-              <Card raised={true} style={{ height: "100%", paddingTop: 10 }}>
-                <CardHeader title={jobPosting.title+', ' +jobPosting.company} subheader={jobPosting.city + ', ' + jobPosting.state + ', ' + jobPosting.country} />
+            
+              <Card raised={true} style={{ height: "100%",marginLeft:10 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                
+              <Avatar 
+                sx={{ height: "50px", width: "50px",marginLeft:2 }}
+                src={ jobPosting.company_logo}
+              />
+                <CardHeader title={jobPosting.title+', ' +jobPosting.company} subheader={
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <LocationOnOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} />
+                  {`${jobPosting.city}, ${jobPosting.state}, ${jobPosting.country}`}
+                </Box>
+                 } />
+                </Box>
                 <CardContent sx={{ paddingTop: 0 }}>
                   <Chip icon={<LocalAtmIcon />} size="small" label={jobPosting.salary} color="success" />
                   {jobPosting.full_time && (
@@ -132,15 +149,18 @@ export default function SeekerDashboard() {
                     <Chip sx={{ marginLeft: 1 }} color="default" size="small" label="Hybrid" />
                   )}
                   <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
-                    <Typography variant="body2" > Openings: {jobPosting.openings}
+                    <Typography variant="body2" > <strong>Openings:</strong> {jobPosting.openings}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
-                    <Typography variant="body2" > Experience: {jobPosting.experience}
+                    <Typography variant="body2"> <strong>Experience: </strong> {jobPosting.experience} years
                     </Typography>
                   </Box>
                 </CardContent>
-                <CardActions>
+                <CardActions disableSpacing>
+                    <IconButton href="/">  
+                      <EditNoteOutlinedIcon /> 
+                    </IconButton>
                   <IconButton onClick={() => handleExpandClick(index)} aria-expanded={expanded[index]} aria-label="show more">
                     <ExpandMoreIcon />
                   </IconButton>
@@ -159,7 +179,7 @@ export default function SeekerDashboard() {
               </Card>
             </Grid>
           ))}
-        {/* </Grid> */}
+        </Grid>
       </Container>
     </ThemeProvider>
   );

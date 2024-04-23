@@ -16,16 +16,7 @@ import Copyright from "../../components/common/Copyright";
 
 
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+
 
 export default function RecruiterDetail({ username }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -36,6 +27,16 @@ export default function RecruiterDetail({ username }) {
   const [userBool, setUserBool] = React.useState(false);
   
 
+  const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -45,43 +46,50 @@ export default function RecruiterDetail({ username }) {
   useEffect(() => {
     async function fetchData() {
       try {
+     
         let CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
         let user_id = null;
 
         if (CC_LOGIN_TOKENS && CC_LOGIN_TOKENS.length > 0) {
           const key = CC_LOGIN_TOKENS[0];
           user_id = Object.keys(key)[0];
+          console.log("key", user_id);
         } else {
           console.error("Not enough tokens present in auth");
-          return;
+          
         }
+          const userParams = {
+            username: username,
+          };
+          const userQueryString = new URLSearchParams(userParams);
 
-        if (user_id) {
-          let userResponse = await userClient.getUserById(user_id);
-          console.log(user_id);
+          let userResponse = await userClient.getUsersByFilter(userQueryString);
 
-          if (userResponse && userResponse._id === user_id) {
+          console.log("userResponse",userResponse);
+          if (userResponse) {
             const queryParams = {
-              user: user_id,
+              user: userResponse[0]._id,
             };
-            const queryString = new URLSearchParams(queryParams).toString();
+            
+            const queryString = new URLSearchParams(queryParams);
 
             let recruiterResponse = await recruiterClient.getRecruitersByFilter(
               queryString
             );
+            console.log("user_id",user_id);           
+             console.log("user_id2",userResponse[0]._id);
 
 
-            console.log("username",username);
-            if(username && username===userResponse.username) {
+            if(user_id===userResponse[0]._id) {
               setUserBool(true);
             }
+          
             setRecruiterData(recruiterResponse[0]);
-            setFirstName(userResponse.firstname);
-            setLastName(userResponse.lastname);
+            setFirstName(userResponse[0].firstname);
+            setLastName(userResponse[0].lastname);
             console.log(recruiterData);
           }
-        }
-      } catch (error) {
+        }  catch (error) {
         console.error("Error fetching data:", error);
       }
     }

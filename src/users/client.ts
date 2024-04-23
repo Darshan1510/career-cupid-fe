@@ -43,8 +43,8 @@ export const updateUser = async (user: any) => {
 
 export const getUsersByFilter = async (filters: any) => {
   let method = "GET";
-  let url = `${API_URL}/users`;
-  const response = await commonUtil.httpRequest(url, method, {}, filters);
+  let url = `${API_URL}/users?${filters}`;
+  const response = await commonUtil.httpRequest(url, method, {}, {});
   return response;
 };
 

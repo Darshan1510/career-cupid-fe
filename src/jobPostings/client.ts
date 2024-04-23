@@ -40,10 +40,10 @@ export const getJobPostingById = async (jobId: string) => {
 };
 
 
-export const getAllJobPostings = async () => {
+export const getAllJobPostings = async (queryParams: any) => {
     let method = "GET";
     let url = `${API_URL}/jobPostings`;
-    const response = await commonUtil.httpRequest(url, method, {}, {});
+    const response = await commonUtil.httpRequest(url, method, {}, queryParams);
     return response;
   };
 

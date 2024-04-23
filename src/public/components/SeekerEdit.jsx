@@ -9,8 +9,6 @@ import { Grid, Box, InputLabel, MenuItem, Select, Button, Typography, FormContro
 import Copyright from "../../components/common/Copyright";
 import TextField from "@mui/material/TextField";
 
-
-
 export default function SeekerEdit() {
 
     const defaultTheme = createTheme();

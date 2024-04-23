@@ -47,6 +47,13 @@ export const updateRecruiter = async (recruiter: any) => {
   return response;
 };
 
+export const approveRecruiter = async (recruiterId: any) => {
+  let method = "GET";
+  let url = `${API_URL}/recruiters/${recruiterId}/approve`;
+  const response = await commonUtil.httpRequest(url, method, {}, {});
+  return response;
+};
+
 // Get a list of seekers who have applied for the job posted by the currently logged in recruiter
 export const getSeekers = async () => {
   let method = "GET";

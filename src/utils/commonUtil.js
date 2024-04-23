@@ -38,7 +38,7 @@ export async function httpRequest(url, method, headers = {}, params = {}) {
   if (res) res = JSON.parse(res);
 
   if (res.error) {
-    switch (res.statusCode) {
+    switch (res.status) {
       case 401:
         window.location.href = `/logout?redirectUrl=${window.location.href}&statusCode=401`;
         break;

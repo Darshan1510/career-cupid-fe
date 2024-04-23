@@ -40,10 +40,10 @@ export const getJobPostingById = async (jobId: string) => {
 };
 
 
-export const getAllJobPostings = async () => {
+export const getAllJobPostings = async (queryParams: any) => {
     let method = "GET";
     let url = `${API_URL}/jobPostings`;
-    const response = await commonUtil.httpRequest(url, method, {}, {});
+    const response = await commonUtil.httpRequest(url, method, {}, queryParams);
     return response;
   };
 
@@ -58,6 +58,13 @@ export const createJobPosting = async (jobPosting: any) => {
   export const deleteJobPosting = async (jobId: string) => {
     let method = "DELETE";
     let url = `${API_URL}/jobPostings/${jobId}`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+  };
+
+  export const getJobPostingsByFilter = async (filters: any) => {
+    let method = "GET";
+    let url = `${API_URL}/jobPostings?${filters}`;
     const response = await commonUtil.httpRequest(url, method, {}, {});
     return response;
   };

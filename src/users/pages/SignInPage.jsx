@@ -3,7 +3,7 @@ import SignIn from "../components/SignIn";
 
 export default function SignInPage() {
   return (
-    <div>
+    <div className="App">
       <SignIn />
     </div>
   );

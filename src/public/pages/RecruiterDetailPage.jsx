@@ -1,14 +1,18 @@
 import React from "react";
-import LogoBanner from "../components/LogoBanner";
-import Layout from "../../layouts/ParentLayout";
+import { useParams } from "react-router-dom";
+import RecruiterDetail from "../components/RecruiterDetail";
+
 
 export default function RecruiterDetailPage() {
+  const { username } = useParams();
+
+
+  React.useEffect(() => {
+  
+  }, []);
   return (
-    <Layout>
-      <div className="d-flex flex-column w-100">
-        <br />
-        <LogoBanner />
-      </div>
-    </Layout>
+    <div className="w-100 text-center">
+    <RecruiterDetail username={username}/>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export default function WelcomePage() {
   }, []);
 
   return (
-    <>
+    <div className="App">
       <header className="bg-primary text-white py-5">
         <div className="container text-center">
           <h1>Welcome to Career Cupid</h1>
@@ -132,6 +132,6 @@ export default function WelcomePage() {
         </div>
       </section>
       {topCompanies && <CompanyList companies={topCompanies} />}
-    </>
+    </div>
   );
 }

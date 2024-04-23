@@ -1,4 +1,4 @@
-import './ReviewApplications.css'
+import './style.css'
 import SeekerCard from './SeekerCard'
 
 function ReviewApplications() {

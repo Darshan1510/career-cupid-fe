@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as client from "../client";
+import * as client from "../../users/client";
 import commonUtil from "../../utils/commonUtil";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, IconButton, Radio, RadioGroup } from "@mui/material";
@@ -24,11 +24,10 @@ import Copyright from "../../components/common/Copyright";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function AdminSignIn() {
   let [showPassword, setShowPassword] = React.useState();
   let [email, setEmail] = React.useState();
   let [password, setPassword] = React.useState();
-  let [role, setRole] = React.useState("RECRUITER");
 
   let navigate = useNavigate();
 
@@ -38,7 +37,7 @@ export default function SignIn() {
     let session = await client.login({
       email: email,
       password: password,
-      role: role,
+      role: "ADMIN",
     });
 
     if (session) {
@@ -72,12 +71,7 @@ export default function SignIn() {
       window.location.href = redirectUrl;
       return;
     }
-
-    if (user.role === "SEEKER") {
-      window.location.href = "/seekers/dashboard";
-    } else if (user.role === "RECRUITER") {
-      window.location.href = "/recruiters/dashboard";
-    }
+    window.location.href = "/admin/dashboard";
   };
 
   const handlePasswordVisibility = () => {
@@ -100,7 +94,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in as admin
           </Typography>
           <Box component="form" onSubmit={loginHandler} sx={{ mt: 1 }}>
             <TextField
@@ -139,22 +133,6 @@ export default function SignIn() {
               }}
               onChange={(event) => setPassword(event.target.value)}
             />
-            <Grid item xs={12}>
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Sign in as</FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="RECRUITER"
-                  name="radio-buttons-group"
-                  value={role}
-                  onChange={(event) => setRole(event.target.value)}
-                >
-                  <FormControlLabel value="RECRUITER" control={<Radio />} label="Recruiter" />
-                  <FormControlLabel value="SEEKER" control={<Radio />} label="Seeker" />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
 
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In

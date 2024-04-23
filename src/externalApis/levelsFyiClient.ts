@@ -1,6 +1,13 @@
 import axios from "axios";
 import { decryptResponse } from "../utils/decryptorUtil";
 
+let axiosConfig = {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+  },
+};
+
 // countryId = 254 for US and 113 for India
 
 const TOP_COMPANIES =
@@ -29,19 +36,28 @@ export const getTopCompanies = async (
   jobTitle: string = "software-engineer",
   filters: any = {}
 ) => {
-  const response = await axios.get(getTitleDataUrl(TOP_COMPANIES, jobTitle), filters);
+  const response = await axios.get(getTitleDataUrl(TOP_COMPANIES, jobTitle), {
+    params: filters,
+    ...axiosConfig,
+  });
   const decryptedRes = decryptResponse(response.data);
   return decryptedRes;
 };
 
 export const getCompanySearches = async (searchText: string) => {
-  const response = await axios.get(COMPANY_SEARCH, { params: { searchText: searchText } });
+  const response = await axios.get(COMPANY_SEARCH, {
+    params: { searchText: searchText },
+    ...axiosConfig,
+  });
   const decryptedRes = decryptResponse(response.data);
   return decryptedRes;
 };
 
 export const getJobSearches = async (searchText: string) => {
-  const response = await axios.get(JOB_SEARCH, { params: { searchText: searchText } });
+  const response = await axios.get(JOB_SEARCH, {
+    params: { searchText: searchText },
+    ...axiosConfig,
+  });
   const decryptedRes = decryptResponse(response.data);
   return decryptedRes;
 };

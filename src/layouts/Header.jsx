@@ -30,6 +30,26 @@ export default function Header() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isMobileSigninMenuOpen = Boolean(mobileSigninAnchorEl);
 
+  const getProfileUrl = () => {
+    if (user) {
+      if (user.role === "RECRUITER") {
+        return `/recruiters/${user.username}`;
+      } else if (user.role === "SEEKER") {
+        return `/seekers/${user.username}`;
+      }
+    }
+  };
+
+  const getAccountUrl = () => {
+    if (user) {
+      if (user.role === "RECRUITER") {
+        return "/recruiters/dashboard";
+      } else if (user.role === "SEEKER") {
+        return "/seekers/dashboard";
+      }
+    }
+  };
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -82,8 +102,16 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <a href={getProfileUrl} style={{ textDecoration: "none" }}>
+          Profile
+        </a>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <a href={getAccountUrl} style={{ textDecoration: "none" }}>
+          My account
+        </a>
+      </MenuItem>
       <MenuItem onClick={removeLogin}>Logout</MenuItem>
     </Menu>
   );
@@ -106,16 +134,14 @@ export default function Header() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle fontSize="large" />
-        </IconButton>
-        <p>Profile</p>
+        <a href={getProfileUrl} style={{ textDecoration: "none" }}>
+          Profile
+        </a>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <a href={getAccountUrl} style={{ textDecoration: "none" }}>
+          My account
+        </a>
       </MenuItem>
       <MenuItem onClick={removeLogin}>
         <IconButton

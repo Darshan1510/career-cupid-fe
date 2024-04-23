@@ -72,7 +72,12 @@ export default function SignIn() {
       window.location.href = redirectUrl;
       return;
     }
-    window.location.href = "/";
+
+    if (user.role === "SEEKER") {
+      window.location.href = "/seekers/dashboard";
+    } else if (user.role === "RECRUITER") {
+      window.location.href = "/recruiters/dashboard";
+    }
   };
 
   const handlePasswordVisibility = () => {

@@ -7,7 +7,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Work from "@mui/icons-material/Work";
-
+import * as recruiterClient from "../recruiters/client.ts";
+import * as userClient from "../users/client.ts";
+import commonUtil from "../utils/commonUtil.js";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -16,28 +18,8 @@ import { useNavigate } from "react-router-dom";
 import Copyright from "../components/common/Copyright";
 import { Autocomplete, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, Snackbar } from "@mui/material";
 import { useEffect } from "react";
-import { error } from "console";
 import MuiAlert from '@mui/material/Alert';
 
-
-interface JobPosting {
-    company: string;
-    title: string;
-    description: string;
-    city: string;
-    state: string;
-    country: string;
-    salary: number;
-    industry: string;
-    openings: number;
-    remote: boolean;
-    hybrid: boolean;
-    fullTime: boolean;
-    createdAt: number;
-    updatedAt: number;
-    skills: string[];
-    experience: number;
-  }
   
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -55,22 +37,23 @@ export default function CreateJobPosting() {
   let [remote, setRemote] = React.useState(false);
   let [hybrid, setHybrid] = React.useState(false);
   let [fullTime, setFullTime] = React.useState(false);
-  let [createdAt, setCreatedAt] = React.useState<number>(Date.now());
-  let [updatedAt, setUpdatedAt] = React.useState<number>(Date.now());
-  let [skills, setSkills] =  React.useState<string[]>([]);
+  let [createdAt, setCreatedAt] = React.useState(Date.now());
+  let [updatedAt, setUpdatedAt] = React.useState(Date.now());
+  let [skills, setSkills] =  React.useState([]);
   let [experience, setExperience] =  React.useState(0);
+  let [recruiterId, setRecruiterId] =  React.useState("");
   
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = React.useState<"success" | "error">("success");
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
   const [countries, setCountries] = React.useState([]);
   
   let navigate = useNavigate();
 
-  const handleSubmit = async (event:any) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    let jobPosting: JobPosting = {
+    let jobPosting = {
         company: company,
         title: title,
         description: description,
@@ -86,7 +69,8 @@ export default function CreateJobPosting() {
         createdAt: createdAt,
         updatedAt: updatedAt,
         skills: skills,
-        experience: experience
+        experience: experience,
+        recruiterId: recruiterId
       };
 
 
@@ -99,11 +83,11 @@ export default function CreateJobPosting() {
     } 
   } catch (error) {
       handleSnackbar("Error posting the job. Please try again.","error");
-      console.error("Oops, there was an error:", error);
+      console.log("Oops, there was an error:", error);
     }
     
   };
-  const handleSnackbar = (message: string, severity: "success" | "error") => {
+  const handleSnackbar = (message, severity) => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
     setSnackbarOpen(true);
@@ -124,23 +108,69 @@ export default function CreateJobPosting() {
     "Automotive",
   ];
 
-
+ 
   useEffect(() => {
     const fetchCountries = async () => {
-        try {
-            const response = await fetch("https://restcountries.com/v3.1/all");
-            const data = await response.json();
-            const formattedCountries = data.map((country: any) => ({
-                code: country.cca2,
-                name: country.name.common,
-            }));
-            setCountries(formattedCountries);
-        } catch (error) {
-            console.error("Error fetching countries:", error);
-        }
+      try {
+        const response = await fetch("https://restcountries.com/v3.1/all");
+        const data = await response.json();
+        const formattedCountries = data.map((country) => ({
+          code: country.cca2,
+          name: country.name.common,
+        }));
+        setCountries(formattedCountries);
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+   
+      }
     };
-
+  
     fetchCountries();
+  }, []);
+  
+
+useEffect(() => {
+  async function fetchData() {
+    try {
+      const CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
+      let user_id = null;
+
+      if (CC_LOGIN_TOKENS && CC_LOGIN_TOKENS.length > 0) {
+        const key = CC_LOGIN_TOKENS[0];
+        user_id = Object.keys(key)[0];
+      } else {
+        console.log("Not enough tokens present in auth");
+        return;
+      }
+
+      if (user_id) {
+        const userResponse= await userClient.getUserById(user_id);
+
+        if (userResponse && userResponse._id === user_id) {
+          const queryParams = {
+            user: user_id,
+          };
+          
+          const queryString = new URLSearchParams(queryParams).toString();
+
+          const recruiterResponse  = await recruiterClient.getRecruitersByFilter(queryString);
+         
+          
+          if (Array.isArray(recruiterResponse) && recruiterResponse.length > 0) {
+            setRecruiterId(recruiterResponse[0]._id);
+          } else {
+            console.log("Recruiter response is empty or not an array.");
+          }
+         
+        
+      }
+    }
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+  }
+
+  fetchData();
 }, []);
   return (
 
@@ -239,7 +269,7 @@ export default function CreateJobPosting() {
                     label="Country"
                     onChange={(e) => setCountry( e.target.value )}
                     >
-                    {countries.map((country: any) => (
+                    {countries.map((country) => (
                         <MenuItem key={country.code} value={country.code}>
                             {country.name}
                         </MenuItem>
@@ -252,10 +282,10 @@ export default function CreateJobPosting() {
                   id="industry"
                   options={industryOptions}
                   value={industry}
-                  onChange={(event:any, newValue:any) => {
+                  onChange={(event, newValue) => {
                     setIndustry(newValue || "");
                   }}
-                  renderInput={(params:any) => <TextField {...params} label="Industry" />}
+                  renderInput={(params) => <TextField {...params} label="Industry" />}
                 />
               </Grid>
               <Grid item xs={12}>

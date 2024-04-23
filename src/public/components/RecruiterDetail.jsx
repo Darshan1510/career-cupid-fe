@@ -27,12 +27,13 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function RecruiterDetail() {
+export default function RecruiterDetail({ username }) {
   const [expanded, setExpanded] = React.useState(false);
   const defaultTheme = createTheme();
   const [recruiterData, setRecruiterData] = React.useState([]);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
+  const [userBool, setUserBool] = React.useState(false);
   
 
   const handleExpandClick = () => {
@@ -69,6 +70,11 @@ export default function RecruiterDetail() {
               queryString
             );
 
+
+            console.log("username",username);
+            if(username && username===userResponse.username) {
+              setUserBool(true);
+            }
             setRecruiterData(recruiterResponse[0]);
             setFirstName(userResponse.firstname);
             setLastName(userResponse.lastname);
@@ -126,9 +132,11 @@ export default function RecruiterDetail() {
                 </Box>
               </CardContent>
               <CardActions disableSpacing>
-                <IconButton href="/recruiterEdit">  
-                  <EditNoteOutlinedIcon /> 
-                </IconButton>
+                  {userBool && ( 
+                    <IconButton href="/recruiters/edit">  
+                      <EditNoteOutlinedIcon /> 
+                    </IconButton>
+                  )}
                 <ExpandMore
                   expand={expanded}
                   onClick={handleExpandClick}

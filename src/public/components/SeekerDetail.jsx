@@ -17,11 +17,13 @@ import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 
-export default function SeekerDetail() {
+export default function SeekerDetail({username}) {
   const defaultTheme = createTheme();
   const [seekerData, setSeekerData] =  React.useState([]);
   const [firstName,setFirstName] = React.useState("");
   const [lastName,setLastName] = React.useState("");
+  const [userBool, setUserBool] = React.useState(false);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -52,6 +54,9 @@ export default function SeekerDetail() {
               queryString
             );
 
+            if(username && username===userResponse.username) {
+              setUserBool(true);
+            }
            
             setSeekerData(seekerResponse[0]);
             setFirstName(userResponse.firstname);
@@ -117,9 +122,11 @@ export default function SeekerDetail() {
                   </Box>
                 </Grid>
                 <Grid item xs={6} md={7} sx={{ textAlign: 'right' }}>
-                  <IconButton color="primary" href="/seekerEdit">
-                    <EditNoteOutlinedIcon fontSize="large" color="action" />
-                  </IconButton>
+                {userBool && ( 
+                    <IconButton href="/seekers/edit">  
+                      <EditNoteOutlinedIcon /> 
+                    </IconButton>
+                  )}
                 </Grid>
           </Grid>
             <Grid item xs={12}>

@@ -54,3 +54,17 @@ export const getUserById = async (userId: string) => {
   const response = await commonUtil.httpRequest(url, method, {}, {});
   return response;
 };
+
+export const getMyUser = async () => {
+  let method = "GET";
+  let url = `${API_URL}/user`;
+  const response = await commonUtil.httpRequest(url, method, {}, {});
+  return response;
+};
+
+export const confirmEmail = async (token: string) => {
+  let method = "POST";
+  let url = `${API_URL}/confirm-email`;
+  const response = await commonUtil.httpRequest(url, method, {}, { token: token });
+  return response;
+};

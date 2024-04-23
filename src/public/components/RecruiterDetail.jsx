@@ -12,6 +12,7 @@ import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import Copyright from "../../components/common/Copyright";
 
 
 
@@ -32,6 +33,7 @@ export default function RecruiterDetail() {
   const [recruiterData, setRecruiterData] = React.useState([]);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
+  
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -146,6 +148,7 @@ export default function RecruiterDetail() {
             </Card>
           </Grid>
         </Grid>
+        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

@@ -5,7 +5,7 @@ export default function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://career-cupid.com/">
+      <Link color="inherit" href="https://career-cupid.netlify.app/">
         Career Cupid
       </Link>{" "}
       {new Date().getFullYear()}

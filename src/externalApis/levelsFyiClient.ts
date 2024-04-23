@@ -13,13 +13,13 @@ const TITLE_DATA = "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/t.js
 const INDIVIDUAL_TITAL_DATA =
   "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/t/{{JOB_TITLE}}.json";
 
-const getSalaryDataURL = (providedSlug: string) => {
+export const getSalaryDataURL = (providedSlug: string) => {
   // Replace the placeholder with the provided slug
   const salaryDataURL = SALARY_DATA_TEMPLATE.replace("{{COMPANY_SLUG}}", providedSlug);
   return salaryDataURL;
 };
 
-const getTitleDataUrl = (url: string, providedTitle: string) => {
+export const getTitleDataUrl = (url: string, providedTitle: string) => {
   // Replace the placeholder with the provided slug
   const titleDataUrl = url.replace("{{JOB_TITLE}}", providedTitle);
   return titleDataUrl;
@@ -30,6 +30,18 @@ export const getTopCompanies = async (
   filters: any = {}
 ) => {
   const response = await axios.get(getTitleDataUrl(TOP_COMPANIES, jobTitle), filters);
+  const decryptedRes = decryptResponse(response.data);
+  return decryptedRes;
+};
+
+export const getCompanySearches = async (searchText: string) => {
+  const response = await axios.get(COMPANY_SEARCH, { params: { searchText: searchText } });
+  const decryptedRes = decryptResponse(response.data);
+  return decryptedRes;
+};
+
+export const getJobSearches = async (searchText: string) => {
+  const response = await axios.get(JOB_SEARCH, { params: { searchText: searchText } });
   const decryptedRes = decryptResponse(response.data);
   return decryptedRes;
 };

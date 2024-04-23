@@ -117,7 +117,7 @@ export default function SeekerDetail() {
                   </Box>
                 </Grid>
                 <Grid item xs={6} md={7} sx={{ textAlign: 'right' }}>
-                  <IconButton color="primary">
+                  <IconButton color="primary" href="/seekerEdit">
                     <EditNoteOutlinedIcon fontSize="large" color="action" />
                   </IconButton>
                 </Grid>
@@ -186,7 +186,7 @@ export default function SeekerDetail() {
               </Grid> 
           </Grid>
            <Grid item sx={{ marginLeft: 5.5}} >
-            <Typography color={"GrayText"} fontSize={15} >{seekerData && seekerData.experience}</Typography>
+            <Typography color={"GrayText"} fontSize={15} >{seekerData && seekerData.experience} years</Typography>
             </Grid>
 
         </Grid>  

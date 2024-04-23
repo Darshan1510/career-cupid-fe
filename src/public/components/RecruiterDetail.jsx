@@ -13,6 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 
+
+
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -34,6 +36,8 @@ export default function RecruiterDetail() {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+ 
 
   useEffect(() => {
     async function fetchData() {
@@ -120,8 +124,8 @@ export default function RecruiterDetail() {
                 </Box>
               </CardContent>
               <CardActions disableSpacing>
-                <IconButton>
-                  <EditNoteOutlinedIcon />
+                <IconButton href="/recruiterEdit">  
+                  <EditNoteOutlinedIcon /> 
                 </IconButton>
                 <ExpandMore
                   expand={expanded}

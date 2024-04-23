@@ -73,9 +73,10 @@ export default function RecruiterDashboard() {
             setLastName(userResponse.lastname);
 
             const jobQueryParams = {
-              recruiterId: recruiterData._id
+              recruiterIds: recruiterResponse[0]._id
             };
-            const jobPostingQueryString = new URLSearchParams(jobQueryParams).toString();
+            console.log("jobQueryParam",jobQueryParams);
+            const jobPostingQueryString = new URLSearchParams(jobQueryParams);
 
             let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(jobPostingQueryString);
             setJobPostingFormData(jobPostingResponse);
@@ -95,7 +96,7 @@ export default function RecruiterDashboard() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline />
-        <Grid container spacing={2} alignItems="center" pt={5}>
+        {/* <Grid container spacing={2} alignItems="center" pt={5}> */}
           <Grid item xs={12} sm={6} md={4} lg={4}>
             <Card raised={true} style={{ height: "100%", paddingTop: 30 }}>
               <Avatar
@@ -171,7 +172,7 @@ export default function RecruiterDashboard() {
               </Card>
             </Grid>
           ))}
-        </Grid>
+        {/* </Grid> */}
       </Container>
     </ThemeProvider>
   );

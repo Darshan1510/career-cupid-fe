@@ -8,13 +8,16 @@ import Container from "@mui/material/Container";
 import { Grid, Box, InputLabel, MenuItem, Select, Button, Typography, FormControl, IconButton, Snackbar } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Copyright from "../../components/common/Copyright";
-
-
+import { useNavigate } from "react-router-dom"; 
+import MuiAlert from '@mui/material/Alert';
 
 export default function RecruiterEdit() {
-
+    const navigate = useNavigate();
     const defaultTheme = createTheme();
-    const [countries, setCountries] = useState([]);
+    const [countries, setCountries] = useState([]);    
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
     const [recruiterFormData, setRecruiterFormData] = React.useState({
       _id : "",
       company: "",
@@ -48,15 +51,38 @@ const handleRecruiterChange = (e) => {
       [name]: value,
   });
 };
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        
-          const recruiterResponse = await recruiterClient.updateRecruiter(recruiterFormData);
-          const userResponse = await userClient.updateUser(userFormData);
-        
-      };
+  const handleSubmit = async (event) => {
+      event.preventDefault();
+      try {
+      const recruiterResponse = await recruiterClient.updateRecruiter(recruiterFormData);
+      const userResponse = await userClient.updateUser(userFormData);
+      if (recruiterResponse) {
+        handleSnackbar("Congratulations, the changes have been saved.", "success");
+        setTimeout(() => {
+          navigate(`/recruiters/${userFormData.username}`);
+      }, 1000); 
+    } 
+    
+      } catch (error) {
+      handleSnackbar("Error saving the changes. Please try again.","error");
+      console.log("Oops, there was an error:", error);
+      }
+    };
   
+    const handleCancel = () => {
+          navigate(`/recruiters/${userFormData.username}`);
+  };
+
+  const handleSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+      setSnackbarOpen(false);
+  };
+
     useEffect(() => {
         async function fetchData() {
           try {
@@ -85,6 +111,7 @@ const handleRecruiterChange = (e) => {
                   queryString
                 );
     
+      
                 setRecruiterFormData(
                   {
                     company: recruiterResponse[0].company,
@@ -101,6 +128,7 @@ const handleRecruiterChange = (e) => {
                 setUserFormData({
                   firstname : userResponse.firstname,
                   lastname : userResponse.lastname,
+                   username: userResponse.username,
                   _id : userResponse._id
                 });
                 try {
@@ -126,6 +154,11 @@ const handleRecruiterChange = (e) => {
 
       return(
     <ThemeProvider theme={defaultTheme}>
+    <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+      <MuiAlert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+      </MuiAlert>
+        </Snackbar>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Typography component="h1" variant="h5" paddingTop={3}>
@@ -280,10 +313,8 @@ const handleRecruiterChange = (e) => {
                     Save
             </Button >
             
-            <Button  color="error" variant="contained">
-              <a href="/recruiterDetail" style={{textDecoration:"none",color:"white"}}>
-            Cancel
-            </a>
+            <Button  color="error" variant="contained" onClick={handleCancel}>
+              Cancel
             </Button>
             </Box>
         </Box>

@@ -7,14 +7,18 @@ import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import { Grid, Box, InputLabel, MenuItem, Select, Button, Typography, FormControl, IconButton, Snackbar } from "@mui/material";
 import Copyright from "../../components/common/Copyright";
+import { useNavigate } from "react-router-dom"; 
 import TextField from "@mui/material/TextField";
-
+import MuiAlert from '@mui/material/Alert';
 
 
 export default function SeekerEdit() {
-
+    const navigate = useNavigate();
     const defaultTheme = createTheme();
     const [countries, setCountries] = useState([]);
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
     const [seekerFormData, setSeekerFormData] = React.useState({
 
     city: "",
@@ -52,14 +56,36 @@ const handleSeekerChange = (e) => {
       [name]: value,
   });
 };
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    try{
+    const seekerResponse = await seekerClient.updateSeekers(seekerFormData);
+    const userResponse = await userClient.updateUser(userFormData);
+     if (seekerResponse) {
+        handleSnackbar("Congratulations, the changes have been saved.", "success");
+        setTimeout(() => {
+          navigate(`/seekers/${userFormData.username}`);
+      }, 1000); 
 
-        
-          const recruiterResponse = await seekerClient.updateSeekers(seekerFormData);
-          const userResponse = await userClient.updateUser(userFormData);
-        
-      };
+      } 
+    }  catch (error) {
+      handleSnackbar("Error saving the changes. Please try again.","error");
+      console.log("Oops, there was an error:", error);
+      }
+    
+};
+const handleCancel = () => {
+    navigate(`/seekers/${userFormData.username}`);
+};
+const handleSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+      setSnackbarOpen(false);
+  };
   
     useEffect(() => {
         async function fetchData() {
@@ -109,6 +135,7 @@ const handleSeekerChange = (e) => {
                 setUserFormData({
                   firstname : userResponse.firstname,
                   lastname : userResponse.lastname,
+                  username : userResponse.username,
                   _id : userResponse._id
                 });
                 try {
@@ -134,11 +161,16 @@ const handleSeekerChange = (e) => {
 
       return(
     <ThemeProvider theme={defaultTheme}>
+         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+      <MuiAlert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+      </MuiAlert>
+        </Snackbar>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Typography component="h1" variant="h5" paddingTop={3}>
-                        Edit Profile
-                    </Typography>
+         Edit Profile
+     </Typography>
       <Box
         sx={{
           marginTop: 4,
@@ -299,9 +331,9 @@ const handleSeekerChange = (e) => {
                   fullWidth
                   id="skills"
                   label="Skills"
-                  value={seekerFormData.skills.join(',')} 
-                  onChange={(event) => setSeekerFormData(event.target.value.split(','))} 
-              />
+                  value={Array.isArray(seekerFormData.skills) ? seekerFormData.skills.join(',') : ''}
+                  onChange={(event) => setSeekerFormData({ ...seekerFormData, skills: event.target.value.split(',') })}
+                  />  
               </Grid>
               <Grid item xs={12}>
               <TextField
@@ -309,9 +341,9 @@ const handleSeekerChange = (e) => {
                   fullWidth
                   id="job_titles"
                   label="Job Titles"
-                  value={seekerFormData.job_titles.join(',')} 
-                  onChange={(event) => setSeekerFormData(event.target.value.split(','))} 
-              />
+                  value={Array.isArray(seekerFormData.job_titles) ? seekerFormData.job_titles.join(',') : ''}
+                  onChange={(event) => setSeekerFormData({ ...seekerFormData, job_titles: event.target.value.split(',') })}
+                  />
               </Grid>
           </Grid>
           
@@ -319,10 +351,8 @@ const handleSeekerChange = (e) => {
             <Button type="submit" variant="contained" sx={{ mr: 3,ml:13 }}>
                     Save
             </Button >
-            <Button  color="error" variant="contained">
-              <a href="/seekerDetail" style={{textDecoration:"none",color:"white"}}>
-            Cancel
-            </a>
+            <Button  color="error" variant="contained" onClick={handleCancel}>
+              Cancel
             </Button>
             </Box>
         </Box>

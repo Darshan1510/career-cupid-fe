@@ -48,6 +48,14 @@ export const getSeekerById = async (seekerId: string) => {
     const response = await commonUtil.httpRequest(url, method, {}, {});
     return response;
   };
+
+  export const updateSeekers = async (seekers: any) => {
+
+    let method = "PUT";
+    let url = `${API_URL}/seekers/${seekers._id}`;
+    const response = await commonUtil.httpRequest(url, method, {}, seekers);
+    return response;
+  };
   
 // Get job postings (TODO: get only the ones where the seeker did not apply so far)
 export const getJobPostings = async () => {

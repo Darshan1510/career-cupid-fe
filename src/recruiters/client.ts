@@ -15,12 +15,35 @@ export interface IRecruiter {
 }
 
 export const createRecruiter = async (recruiter: any) => {
-    // TODO: Fetch the ID of the logged-in user
-    recruiter.user = "60f3b3b3b3b3b3b3b3b3b3b3";
+    let CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
+    const id = CC_LOGIN_TOKENS[0];
+    const key = Object.keys(id)[0];
+
+    let method = "GET";
+    let url = `${API_URL}/users/${key}`;
+    const user: any = await commonUtil.httpRequest(url, method, {}, {});
+
+    recruiter.user = key;
+    recruiter.email = user.email;
     recruiter.created_at = Date.now();
     recruiter.approved = false;
-    let method = "POST";
-    let url = `${API_URL}/recruiters`;
+    method = "POST";
+    url = `${API_URL}/recruiters`;
     const response = await commonUtil.httpRequest(url, method, {}, recruiter);
     return response;
 };
+
+export const getRecruitersByFilter = async (filters: any) => {
+    let method = "GET";
+    let url = `${API_URL}/recruiters?${filters}`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+  };
+
+  export const updateRecruiter = async (recruiter: any) => {
+    let method = "PUT";
+    let url = `${API_URL}/recruiters/${recruiter._id}`;
+    const response = await commonUtil.httpRequest(url, method, {}, recruiter);
+    return response;
+  };
+  

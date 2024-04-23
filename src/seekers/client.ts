@@ -48,4 +48,12 @@ export const getSeekerById = async (seekerId: string) => {
     const response = await commonUtil.httpRequest(url, method, {}, {});
     return response;
   };
+
+  export const updateSeekers = async (seekers: any) => {
+
+    let method = "PUT";
+    let url = `${API_URL}/seekers/${seekers._id}`;
+    const response = await commonUtil.httpRequest(url, method, {}, seekers);
+    return response;
+  };
   

@@ -6,16 +6,16 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import { Grid, Box, InputLabel, MenuItem, Select, Button, Typography, FormControl, IconButton, Snackbar } from "@mui/material";
-import { Copyright } from "@mui/icons-material";
+import Copyright from "../../components/common/Copyright";
 import TextField from "@mui/material/TextField";
 
 
 
-export default function RecruiterEdit() {
+export default function SeekerEdit() {
 
     const defaultTheme = createTheme();
     const [countries, setCountries] = useState([]);
-    const [seekerFormData, setSekeerFormData] = React.useState({
+    const [seekerFormData, setSeekerFormData] = React.useState({
 
     city: "",
     state: "",
@@ -220,7 +220,7 @@ const handleSeekerChange = (e) => {
                         id="country"
                         value={seekerFormData.country}
                         label="Country"
-                        onChange={(e) => setSekeerFormData({ ...seekerFormData, country: e.target.value })}
+                        onChange={(e) => setSeekerFormData({ ...seekerFormData, country: e.target.value })}
                         
                                     >
                         {countries.map((country) => (
@@ -257,15 +257,70 @@ const handleSeekerChange = (e) => {
                 onChange={handleSeekerChange}
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="resume"
+                label="Resume"
+                id="resume"
+                autoComplete="resume"
+                value={seekerFormData.resume}
+                onChange={handleSeekerChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                required
+                fullWidth
+                name="experience"
+                label="Experience"
+                id="experience"
+                autoComplete="experience"
+                value={seekerFormData.experience}
+                onChange={handleSeekerChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <TextField
+                required
+                fullWidth
+                name="education"
+                label="Education"
+                id="education"
+                autoComplete="education"
+                value={seekerFormData.education}
+                onChange={handleSeekerChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                  required
+                  fullWidth
+                  id="skills"
+                  label="Skills"
+                  value={seekerFormData.skills.join(',')} 
+                  onChange={(event) => setSeekerFormData(event.target.value.split(','))} 
+              />
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                  required
+                  fullWidth
+                  id="job_titles"
+                  label="Job Titles"
+                  value={seekerFormData.job_titles.join(',')} 
+                  onChange={(event) => setSeekerFormData(event.target.value.split(','))} 
+              />
+              </Grid>
           </Grid>
           
           <Box sx={{ display: "flex", marginTop: 3 }}>
             <Button type="submit" variant="contained" sx={{ mr: 3,ml:13 }}>
                     Save
             </Button >
-            
             <Button  color="error" variant="contained">
-              <a href="/recruiterDetail" style={{textDecoration:"none",color:"white"}}>
+              <a href="/seekerDetail" style={{textDecoration:"none",color:"white"}}>
             Cancel
             </a>
             </Button>

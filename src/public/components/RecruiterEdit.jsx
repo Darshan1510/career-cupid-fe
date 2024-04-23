@@ -6,8 +6,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import { Grid, Box, InputLabel, MenuItem, Select, Button, Typography, FormControl, IconButton, Snackbar } from "@mui/material";
-import { Copyright } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
+import Copyright from "../../components/common/Copyright";
 
 
 

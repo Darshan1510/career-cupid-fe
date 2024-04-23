@@ -49,3 +49,10 @@ export const getSeekerById = async (seekerId: string) => {
     return response;
   };
   
+// Get job postings (TODO: get only the ones where the seeker did not apply so far)
+export const getJobPostings = async () => {
+    let method = "GET";
+    let url = `${API_URL}/jobPostings`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+};

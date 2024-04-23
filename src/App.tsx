@@ -14,8 +14,11 @@ import SignUpPage from "./users/pages/SignUpPage";
 import Layout from "./layouts/ParentLayout";
 import CreateRecruiter from "./recruiters/CreateRecruiter";
 import CreateSeeker from "./seekers/CreateSeeker";
+import SeekJobs from "./seekers/SeekJobs";
 
 import CreateJobPosting from "./jobPostings/jobPosting";
+
+import ReviewApplications from "./recruiters/ReviewApplications";
 import { getMyUser } from "./users/client";
 import { AuthProvider } from "./AuthContext";
 import SignUpConfirmPage from "./users/pages/SignUpConfirmPage";
@@ -77,6 +80,8 @@ function App() {
               <Route path="/recruiterDetail" element={<RecruiterDetail />} />
               <Route path="/recruiterEdit" element={<RecruiterEdit />} />
               <Route path="/seekerEdit" element={<SeekerEdit />} />
+                <Route path="/seek-jobs" element={<SeekJobs />} />
+              <Route path="/review-applications" element={<ReviewApplications />} />
             </Routes>
           </BrowserRouter>
         </Layout>

@@ -1,4 +1,4 @@
-import './style.css'
+// import './SeekJobs.css'
 import JobPostingCard from './JobPostingCard'
 
 function SeekJobs() {

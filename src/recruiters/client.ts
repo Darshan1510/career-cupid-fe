@@ -64,7 +64,8 @@ export const getSeekers = async () => {
 
 export const shortlistSeeker = async (seekerId: any) => {
   let method = "POST";
-  const jobId = "66244808511633a3e517c68c";
+  // TODO: This is a dummy jobId. Replace it with the actual jobId
+  const jobId = "6627afcefa8b378bca53245b";
   let url = `${API_URL}/jobPostings/${jobId}/shortlistApplicant`;
   const response = await commonUtil.httpRequest(url, method, {}, { applicantId: seekerId });
   return response;

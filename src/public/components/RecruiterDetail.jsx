@@ -5,7 +5,7 @@ import * as userClient from "../../users/client.ts";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
-import { Grid, Box, Typography, Avatar, Card, CardContent, IconButton, CardActions, Link } from "@mui/material";
+import { Grid, Box, Typography, Avatar, Card, CardContent,Button, IconButton, CardActions, Link } from "@mui/material";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
@@ -13,6 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import Copyright from "../../components/common/Copyright";
+import { AuthContext } from "../../AuthContext";
+import { useNavigate } from "react-router-dom"; 
 
 
 
@@ -25,6 +27,8 @@ export default function RecruiterDetail({ username }) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [userBool, setUserBool] = React.useState(false);
+  const authUser = React.useContext(AuthContext);
+  const navigate = useNavigate();
   
 
   const ExpandMore = styled((props) => {
@@ -37,10 +41,12 @@ export default function RecruiterDetail({ username }) {
       duration: theme.transitions.duration.shortest,
     }),
   }));
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
+    const handleExpandClick = () => {
+      setExpanded(!expanded);
+    };
+    const handleLogin = () => {
+      navigate(`/signin`);
+    }
  
 
   useEffect(() => {
@@ -68,7 +74,7 @@ export default function RecruiterDetail({ username }) {
           console.log("userResponse",userResponse);
           if (userResponse) {
             const queryParams = {
-              user: userResponse[0]._id,
+              userIds: userResponse[0]._id,
             };
             
             const queryString = new URLSearchParams(queryParams);
@@ -98,6 +104,7 @@ export default function RecruiterDetail({ username }) {
   }, []);
 
   return (
+  
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline />
@@ -106,15 +113,13 @@ export default function RecruiterDetail({ username }) {
           spacing={2}
           justifyContent="center"
           alignItems="center"
-          pt={10}
-        >
+          pt={10}>
           <Grid item xs={12} sm={6} md={4}>
+          {authUser && authUser.hasOwnProperty("email") ?  (
             <Card raised={true} style={{ height: "100%",paddingTop:30 }}>
-
               <Avatar
                 sx={{ height: "120px", width: "120px", margin: "auto" }}
-                src={recruiterData && recruiterData.profile_picture}
-              />
+                src={recruiterData && recruiterData.profile_picture}/>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {firstName} {lastName}
@@ -161,11 +166,47 @@ export default function RecruiterDetail({ username }) {
                   </Typography>
                 </CardContent>
               </Collapse>
-            </Card>
+            </Card> ) : ( <Card raised={true} style={{ height: "100%",paddingTop:30 }}>
+              <Avatar
+                sx={{ height: "120px", width: "120px", margin: "auto" }}
+                />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {firstName} {lastName}
+                </Typography>
+                <Typography color="text.secondary">Recruiter at {recruiterData && recruiterData.company}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
+                  <LocationOnOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
+                  <Typography variant="body2" >
+                    {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state}, {recruiterData && recruiterData.country}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
+                  <LanguageOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
+                  <Link href={recruiterData && recruiterData.website} color="inherit" underline="hover" target="_blank" rel="noopener noreferrer">
+                    {recruiterData && recruiterData.website}
+                  </Link>
+                </Box>
+              </CardContent>
+              <CardActions>             
+                     <Button 
+                  onClick={handleLogin}
+                  variant="contained"  
+                  color="primary"   
+                  sx={{               
+                    display: 'block', 
+                    margin: 'auto',   
+                    mt: 2             
+                    }}>
+                   Sign In to view more
+                  </Button>
+                  </CardActions>
+            </Card> 
+            )}
           </Grid>
         </Grid>
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
-  );
+    ) ;
 }

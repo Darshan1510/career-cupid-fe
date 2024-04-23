@@ -61,3 +61,10 @@ export const createJobPosting = async (jobPosting: any) => {
     const response = await commonUtil.httpRequest(url, method, {}, {});
     return response;
   };
+
+  export const getJobPostingsByFilter = async (filters: any) => {
+    let method = "GET";
+    let url = `${API_URL}/jobPostings?${filters}`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+  };

@@ -26,6 +26,7 @@ import SeekerDetail from "./public/components/SeekerDetail";
 import RecruiterDetail from "./public/components/RecruiterDetail";
 import RecruiterEdit from "./public/components/RecruiterEdit";
 import SeekerEdit from "./public/components/SeekerEdit";
+import RecruiterDashboard from "./recruiters/RecruiterDashboard";
 
 function App() {
   let [user, setUser] = React.useState({});
@@ -82,6 +83,7 @@ function App() {
               <Route path="/seekerEdit" element={<SeekerEdit />} />
                 <Route path="/seek-jobs" element={<SeekJobs />} />
               <Route path="/review-applications" element={<ReviewApplications />} />
+              <Route path="/recruiterDashboard" element={<RecruiterDashboard />} />
             </Routes>
           </BrowserRouter>
         </Layout>

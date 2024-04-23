@@ -137,8 +137,8 @@ const handleSeekerChange = (e) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Typography component="h1" variant="h5" paddingTop={3}>
-                        Edit Profile
-                    </Typography>
+         Edit Profile
+     </Typography>
       <Box
         sx={{
           marginTop: 4,
@@ -299,9 +299,9 @@ const handleSeekerChange = (e) => {
                   fullWidth
                   id="skills"
                   label="Skills"
-                  value={seekerFormData.skills.join(',')} 
-                  onChange={(event) => setSeekerFormData(event.target.value.split(','))} 
-              />
+                  value={Array.isArray(seekerFormData.skills) ? seekerFormData.skills.join(',') : ''}
+                  onChange={(event) => setSeekerFormData({ ...seekerFormData, skills: event.target.value.split(',') })}
+                  />  
               </Grid>
               <Grid item xs={12}>
               <TextField
@@ -309,9 +309,9 @@ const handleSeekerChange = (e) => {
                   fullWidth
                   id="job_titles"
                   label="Job Titles"
-                  value={seekerFormData.job_titles.join(',')} 
-                  onChange={(event) => setSeekerFormData(event.target.value.split(','))} 
-              />
+                  value={Array.isArray(seekerFormData.job_titles) ? seekerFormData.job_titles.join(',') : ''}
+                  onChange={(event) => setSeekerFormData({ ...seekerFormData, job_titles: event.target.value.split(',') })}
+                  />
               </Grid>
           </Grid>
           

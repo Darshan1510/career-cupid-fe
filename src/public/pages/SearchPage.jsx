@@ -15,7 +15,7 @@ export default function SearchPage() {
     setType(params.get("type") || "ALL");
   }, []);
   return (
-    <div className="w-100">
+    <div className="w-100 text-center">
       {type === "ALL" && <SearchViewPage />}
 
       {type === "COMPANY" && <CompanySearchPage />}

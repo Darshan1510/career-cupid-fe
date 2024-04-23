@@ -59,14 +59,14 @@ export async function httpRequest(url, method, headers = {}, params = {}) {
   return res;
 }
 
-const removeCurrentLogin = () => {
+const removeCurrentLogin = (userId) => {
   let tokens = getLoginTokens();
   console.log(tokens);
   if (!tokens) return;
   tokens.shift();
   let auth = localStorage.getItem("CCAUTH");
   auth = JSON.parse(auth);
-  auth.MTZ_LOGIN_TOKENS = tokens;
+  auth.CC_LOGIN_TOKENS = tokens;
   localStorage.setItem("CCAUTH", JSON.stringify(auth));
 };
 
@@ -108,6 +108,7 @@ let commonUtil = {
   setLoginToken,
   getLoginTokens,
   logout,
+  removeCurrentLogin
 };
 
 export default commonUtil;

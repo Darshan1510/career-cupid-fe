@@ -16,8 +16,13 @@ import CreateRecruiter from "./recruiters/CreateRecruiter";
 import CreateSeeker from "./seekers/CreateSeeker";
 
 import CreateJobPosting from "./jobPostings/jobPosting";
+import { getMyUser } from "./users/client";
+import { AuthProvider } from "./AuthContext";
+import SignUpConfirmPage from "./users/pages/SignUpConfirmPage";
 
 function App() {
+  let [user, setUser] = React.useState({});
+
   const test = () => {
     let payload =
       "PGF/4hzKuy89+4RiRL0I/FNOde3SCoZvSJHnCnvdPtOUbWkCh9LrNVXSDDUkchmE8HR9MUYeGpTAv9LCp6fVDjdQXuezZQk2bR4yWFP9PktIuKqngYCnSibUlz1ZzwlAeW3GWyFWLHRYKR5r5qMjqIQnT2Z3xL53sq9crdRlrH5yR2Kk05xid8/fdQvMQFKUnc81BZD8z70nRBfMplORE7nBrArCKiNPXN43E6+GVzM=";
@@ -30,25 +35,44 @@ function App() {
     console.log(res);
   };
 
+  const getCurrUser = async () => {
+    let user = await getMyUser();
+    return user;
+  };
+
+  const init = async () => {
+    if (window.location.pathname.startsWith("/logout")) user = {};
+    //user = await getCurrUser();
+    setUser(user);
+  };
+
+  React.useEffect(() => {
+    init();
+  }, []);
+
   return (
-    <div className="App">
-      <Layout>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<WelcomePage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/signin" element={<SignInPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/seekers/:username" element={<SeekerDetailPage />} />
-            <Route path="/recruiters/:username" element={<RecruiterDetailPage />} />
-            <Route path="/jobPosting" element={<CreateJobPosting />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/create-recruiter" element={<CreateRecruiter />} />
-            <Route path="/create-seeker" element={<CreateSeeker />} />
-          </Routes>
-        </BrowserRouter>
-      </Layout>
+    <div className="">
+      <AuthProvider>
+        <Layout>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<WelcomePage />} />
+              <Route path="/me" element={<WelcomePage />} />
+              <Route path="/confirm-email" element={<SignUpConfirmPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/seekers/:username" element={<SeekerDetailPage />} />
+              <Route path="/recruiters/:username" element={<RecruiterDetailPage />} />
+              <Route path="/jobPosting" element={<CreateJobPosting />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/create-recruiter" element={<CreateRecruiter />} />
+              <Route path="/create-seeker" element={<CreateSeeker />} />
+            </Routes>
+          </BrowserRouter>
+        </Layout>
+      </AuthProvider>
     </div>
   );
 }

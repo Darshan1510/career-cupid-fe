@@ -16,13 +16,19 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import SearchBox from "../components/common/SearchBox";
+import { Logout } from "@mui/icons-material";
+import commonUtil from "../utils/commonUtil";
+import { AuthContext } from "../AuthContext";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [mobileSigninAnchorEl, setMobileSigninAnchorEl] = React.useState(null);
+  const user = React.useContext(AuthContext);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMobileSigninMenuOpen = Boolean(mobileSigninAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,6 +45,24 @@ export default function Header() {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileSiginMenuOpen = (event) => {
+    setMobileSigninAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileSiginMenuClose = () => {
+    setMobileSigninAnchorEl(null);
+  };
+
+  const removeLogin = async (userId) => {
+    const ok = await window.confirm("Are you sure?");
+    if (!ok) return;
+    commonUtil.removeCurrentLogin(userId);
+
+    if (commonUtil.getLoginTokens() && commonUtil.getLoginTokens().length > 0)
+      window.location.reload();
+    else window.location.href = "/signin";
   };
 
   const menuId = "primary-search-account-menu";
@@ -60,6 +84,7 @@ export default function Header() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={removeLogin}>Logout</MenuItem>
     </Menu>
   );
 
@@ -88,56 +113,133 @@ export default function Header() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <AccountCircle fontSize="large" />
         </IconButton>
         <p>Profile</p>
+      </MenuItem>
+      <MenuItem onClick={removeLogin}>
+        <IconButton
+          size="large"
+          aria-label="logout of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <Logout />
+        </IconButton>
+        <p>Logout</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  const mobileSignInMenuId = "primary-search-account-signin-menu-mobile";
+  const renderMobileSignInMenu = (
+    <Menu
+      anchorEl={mobileSigninAnchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id={mobileSignInMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMobileSigninMenuOpen}
+      onClose={handleMobileSiginMenuClose}
+    >
+      <MenuItem onClick={handleMobileSiginMenuOpen}>
+        <a href="/signin" style={{ textDecoration: "none" }}>
+          Sign in
+        </a>
+      </MenuItem>
+      <MenuItem onClick={handleMobileSiginMenuOpen}>
+        <a href="/signup" style={{ textDecoration: "none" }}>
+          Sign up
+        </a>
       </MenuItem>
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar sx={{ bgcolor: "white" }} position="static">
         <Toolbar>
           <Typography
             variant="h6"
             noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            component="a"
+            href="/"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              fontWeight: "bolder",
+              color: "primary.main",
+              textDecoration: "none",
+            }}
           >
             Career Cupid
           </Typography>
-          <SearchBox />
+          <Box>
+            <SearchBox />
+          </Box>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+
+          {user && user.hasOwnProperty("email") ? (
+            <>
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Box>
+              <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  onClick={handleMobileMenuOpen}
+                >
+                  <MoreIcon />
+                </IconButton>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <a href="/signin" className="btn btn-primary btn-sm">
+                  Sign in
+                </a>
+                &nbsp;
+                <a href="/signup" className="btn btn-success btn-sm">
+                  Sign up
+                </a>
+              </Box>
+              <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show more"
+                  aria-controls={mobileSignInMenuId}
+                  aria-haspopup="true"
+                  onClick={handleMobileSiginMenuOpen}
+                >
+                  <MoreIcon />
+                </IconButton>
+              </Box>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {renderMobileSignInMenu}
     </Box>
   );
 }

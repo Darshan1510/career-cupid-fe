@@ -60,15 +60,14 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/create-recruiter" element={<CreateRecruiter />} />
               <Route path="/create-seeker" element={<CreateSeeker />} />
-              <Route path="/recruiterEdit" element={<RecruiterEdit />} />
-              <Route path="/seekerEdit" element={<SeekerEdit />} />
+              <Route path="/recruiters/edit" element={<RecruiterEdit />} />
+              <Route path="/seekers/edit" element={<SeekerEdit />} />
               <Route path="/seek-jobs" element={<SeekJobs />} />
               <Route path="/recruiters/dashboard" element={<RecruiterDashboard />} />
               <Route path="/seekers/dashboard" element={<SeekerDashboard />} />
               <Route path="/review-applications" element={<ReviewApplications />} />
               <Route path="/apply-jobs" element={<ApplyJobs />} />
               <Route path="/shortlist-candidates" element={<ShortlistCandidates />} />
-
             </Routes>
           </BrowserRouter>
         </Layout>

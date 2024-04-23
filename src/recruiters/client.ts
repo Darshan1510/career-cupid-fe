@@ -32,3 +32,18 @@ export const createRecruiter = async (recruiter: any) => {
     const response = await commonUtil.httpRequest(url, method, {}, recruiter);
     return response;
 };
+
+export const getRecruitersByFilter = async (filters: any) => {
+    let method = "GET";
+    let url = `${API_URL}/recruiters?${filters}`;
+    const response = await commonUtil.httpRequest(url, method, {}, {});
+    return response;
+  };
+
+  export const updateRecruiter = async (recruiter: any) => {
+    let method = "PUT";
+    let url = `${API_URL}/recruiters/${recruiter._id}`;
+    const response = await commonUtil.httpRequest(url, method, {}, recruiter);
+    return response;
+  };
+  

@@ -65,7 +65,6 @@ export default function RecruiterDashboard() {
 
         if (user_id) {
           let userResponse = await userClient.getUserById(user_id);
-          console.log(user_id);
 
           if (userResponse && userResponse._id === user_id) {
             const queryParams = {
@@ -75,6 +74,10 @@ export default function RecruiterDashboard() {
 
             let recruiterResponse = await recruiterClient.getRecruitersByFilter(queryString);
 
+            if (recruiterResponse.length === 0) {
+              window.location.href = "/create-recruiter";
+            }
+
             setRecruiterData(recruiterResponse[0]);
             setFirstName(userResponse.firstname);
             setLastName(userResponse.lastname);
@@ -82,14 +85,12 @@ export default function RecruiterDashboard() {
             const jobQueryParams = {
               recruiterIds: recruiterResponse[0]._id,
             };
-            console.log("jobQueryParam", jobQueryParams);
             const jobPostingQueryString = new URLSearchParams(jobQueryParams);
 
             let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(
               jobPostingQueryString
             );
             setJobPostingFormData(jobPostingResponse);
-            console.log(jobPostingResponse);
             setExpanded(new Array(jobPostingResponse.length).fill(false));
           }
         }

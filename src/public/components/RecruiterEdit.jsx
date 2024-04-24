@@ -56,7 +56,7 @@ const handleRecruiterChange = (e) => {
       try {
       const recruiterResponse = await recruiterClient.updateRecruiter(recruiterFormData);
       const userResponse = await userClient.updateUser(userFormData);
-      if (recruiterResponse) {
+      if (recruiterResponse || userResponse) {
         handleSnackbar("Congratulations, the changes have been saved.", "success");
         setTimeout(() => {
           navigate(`/recruiters/${userFormData.username}`);

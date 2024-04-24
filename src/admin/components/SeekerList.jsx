@@ -28,9 +28,34 @@ export default function SeekerList() {
     fetchSeekerProfiles();
   }, []);
 
+  const onSearchHandler = async (keyword) => {
+    let seekers = await seekerClient.getSeekersByFilter(new URLSearchParams(`keyword=${keyword}`));
+    let userIds = seekers.map((seeker) => seeker.user);
+    let users = await userClient.getUsersByFilter(
+      new URLSearchParams(`userIds=${userIds.join(",")}`)
+    );
+    let userMap = {};
+    users.forEach((user) => (userMap[user._id] = user));
+    let seekerList = seekers.map((seeker) => {
+      let user = userMap[seeker.user];
+      delete user._id;
+      return { ...seeker, ...user };
+    });
+    setSeekerProfiles(seekerList);
+  };
+
   return (
     <div className="container">
       <h2 className="text-center mb-4">Seekers</h2>
+      <div className="col-md-12">
+        <input
+          type="text"
+          placeholder="Search by name, location, skills, etc."
+          className="form-control"
+          onChange={(e) => onSearchHandler(e.target.value)}
+        />
+      </div>
+      <br />
       <div className="row">
         {seekerProfiles && seekerProfiles.length > 0 ? (
           seekerProfiles.map((seeker, index) => (
@@ -48,7 +73,7 @@ export default function SeekerList() {
 
 const SeekerProfile = ({ seeker }) => {
   return (
-    <Card sx={{ maxWidth: 600, marginBottom: 2, height: "100%" }}>
+    <Card sx={{ marginBottom: 2, height: "100%" }}>
       <CardContent>
         <div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
           <Avatar src={seeker.profile_picture} alt={seeker.email} />
@@ -62,7 +87,7 @@ const SeekerProfile = ({ seeker }) => {
         <Typography variant="body1" gutterBottom>
           <b> Location:</b> {seeker.city}, {seeker.state}, {seeker.country}
         </Typography>
-       
+
         <Typography variant="body1" gutterBottom>
           <b> Education:</b> {seeker.education}
         </Typography>

@@ -15,20 +15,8 @@ export interface IRecruiter {
 }
 
 export const createRecruiter = async (recruiter: any) => {
-  let CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
-  const id = CC_LOGIN_TOKENS[0];
-  const key = Object.keys(id)[0];
-
-  let method = "GET";
-  let url = `${API_URL}/users/${key}`;
-  const user: any = await commonUtil.httpRequest(url, method, {}, {});
-
-  recruiter.user = key;
-  recruiter.email = user.email;
-  recruiter.created_at = Date.now();
-  recruiter.approved = false;
-  method = "POST";
-  url = `${API_URL}/recruiters`;
+  let method = "POST";
+  let url = `${API_URL}/recruiters`;
   const response = await commonUtil.httpRequest(url, method, {}, recruiter);
   return response;
 };

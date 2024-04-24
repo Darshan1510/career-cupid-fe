@@ -13,12 +13,14 @@ import { FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar, To
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { createRecruiter } from "./client";
 import MuiAlert from '@mui/material/Alert';
+import { AuthContext } from "../AuthContext";
 
 const defaultTheme = createTheme();
 
 const RecruiterSignUp = () => {
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const user: any = React.useContext(AuthContext);
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -44,6 +46,8 @@ const RecruiterSignUp = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
     const [formData, setFormData] = useState({
+        user: "",
+        email: "",
         company: "",
         city: "",
         state: "",
@@ -65,6 +69,8 @@ const RecruiterSignUp = () => {
         event.preventDefault();
 
         try {
+            formData.user = user._id;
+            formData.email = user.email;
             const createdUser = await createRecruiter(formData);
             if (createdUser) {
                 handleSnackbar("Thank you for filling out the form, we shall update you once you are approved/rejected.", "success");

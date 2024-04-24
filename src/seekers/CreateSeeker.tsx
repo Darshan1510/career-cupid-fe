@@ -13,12 +13,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createSeeker } from "./client";
 import { FormControl, InputLabel, MenuItem, Select, Snackbar } from "@mui/material";
 import MuiAlert from '@mui/material/Alert';
+import { AuthContext } from "../AuthContext";
 
 const defaultTheme = createTheme();
 
 export default function CreateSeeker() {
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const user:any = React.useContext(AuthContext);
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -78,6 +80,8 @@ export default function CreateSeeker() {
             ...formData,
             job_titles: jobTitlesArray,
             skills: skillsArray,
+            user: user._id,
+            email: user.email,
         };
 
         try {

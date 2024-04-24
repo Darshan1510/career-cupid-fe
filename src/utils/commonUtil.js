@@ -8,11 +8,6 @@ export async function httpRequest(url, method, headers = {}, params = {}) {
   let token = tokens && tokens.length > 0 && tokens[0];
   let vals = token ? Object.values(token) : null;
   let tokenStr = vals ? vals[0] : "";
-  let userId = null;
-  if (tokenStr) {
-    let body = tokenStr.split(".")[1];
-    userId = JSON.parse(atob(body)).userId;
-  }
 
   const requestOptions = {
     method,
@@ -33,11 +28,10 @@ export async function httpRequest(url, method, headers = {}, params = {}) {
     }
   }
   let res = await fetch(url, requestOptions);
-
   res = await res.text();
   if (res) res = JSON.parse(res);
 
-  if (res.error) {
+  if (res.message) {
     switch (res.status) {
       case 401:
         window.location.href = `/logout?redirectUrl=${window.location.href}&statusCode=401`;
@@ -68,11 +62,12 @@ const removeCurrentLogin = (userId) => {
   auth = JSON.parse(auth);
   auth.CC_LOGIN_TOKENS = tokens;
   localStorage.setItem("CCAUTH", JSON.stringify(auth));
+  window.location.href = "/signin";
 };
 
 const logout = (redirectUrl) => {
   localStorage.clear();
-  window.location.href = "/login?redirectUrl=/me?justLoggedIn=true";
+  window.location.href = "/signin?redirectUrl=/me&justLoggedIn=true";
 };
 
 const setLoginToken = (userId, token) => {
@@ -108,7 +103,7 @@ let commonUtil = {
   setLoginToken,
   getLoginTokens,
   logout,
-  removeCurrentLogin
+  removeCurrentLogin,
 };
 
 export default commonUtil;

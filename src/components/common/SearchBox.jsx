@@ -1,21 +1,16 @@
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  Autocomplete,
   Avatar,
-  Box,
   ClickAwayListener,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  TextField,
-  autocompleteClasses,
 } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { alpha, styled } from "@mui/material/styles";
 import React from "react";
 import * as levelsFyiClient from "../../externalApis/levelsFyiClient";
-import { Link, NavLink } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -81,10 +76,9 @@ const StyledRoot = styled("div")({
 export default function SearchBox() {
   const params = new URLSearchParams(window.location.search);
   let [keyword, setKeyword] = React.useState(params.get("keyword"));
-  let [type, setType] = React.useState(params.get("type") || "ALL");
+  let type = params.get("type") || "ALL";
   let [searchAnchor, setSearchAnchor] = React.useState(null);
   let [suggestions, setSuggestions] = React.useState({});
-  let [loading, setLoading] = React.useState(false);
 
   const onSearch = (e) => {
     e.preventDefault();
@@ -96,22 +90,16 @@ export default function SearchBox() {
     window.location.href = `/search?keyword=${keyword}&type=${type}`;
   };
 
-  React.useEffect(() => {
-    autoComplete(keyword);
-  }, [keyword]);
-
   const autoComplete = async (k) => {
+    setKeyword(k);
     if (k) {
       let ajaxes = [levelsFyiClient.getCompanySearches(k), levelsFyiClient.getJobSearches(k)];
 
-      setLoading(true);
       let data = await Promise.allSettled(ajaxes);
-      setLoading(false);
 
       data = data.map((d) => d.value);
       let [companySearches, jobSearches] = data;
-      companySearches = companySearches.slice(4);
-      jobSearches = jobSearches.results.slice(4);
+      jobSearches = jobSearches.results;
       suggestions = {
         companySearches: companySearches,
         jobSearches: jobSearches,
@@ -130,9 +118,9 @@ export default function SearchBox() {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search by Company or Title"
+                placeholder="Search (Leves.fyi company)"
                 inputProps={{ "aria-label": "search" }}
-                onChange={(e) => setKeyword(e.target.value)}
+                onChange={(e) => autoComplete(e.target.value)}
                 value={keyword || ""}
                 style={{ display: "contents" }}
                 onFocus={(e) => setSearchAnchor(e.target)}

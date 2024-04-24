@@ -1,20 +1,34 @@
+import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  IconButton,
+  Link,
+  Typography,
+} from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
-import commonUtil from "../utils/commonUtil.js";
+import * as jobPostingClient from "../jobPostings/client.ts";
 import * as recruiterClient from "../recruiters/client.ts";
 import * as userClient from "../users/client.ts";
-import * as jobPostingClient from "../jobPostings/client.ts";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import { Grid, Box, Typography, Avatar, Card, CardActionArea, CardContent, Chip, CardHeader, Link, IconButton, CardActions } from "@mui/material";
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Collapse from '@mui/material/Collapse';
+import commonUtil from "../utils/commonUtil.js";
+import { useNavigate } from "react-router-dom";
 
 export default function RecruiterDashboard() {
   const defaultTheme = createTheme();
@@ -23,23 +37,16 @@ export default function RecruiterDashboard() {
   const [lastName, setLastName] = React.useState("");
   const [jobPostingFormData, setJobPostingFormData] = React.useState([]);
   const [recruiterData, setRecruiterData] = React.useState([]);
-
-  const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
+  const navigate = useNavigate();
 
   const handleExpandClick = (index) => {
-
     const newExpanded = [...expanded];
     newExpanded[index] = !newExpanded[index];
     setExpanded(newExpanded);
+  };
+
+  const handleEditClick = (jobPostingId) => {
+    navigate(`/job-postings/${jobPostingId}/edit`);
   };
 
   useEffect(() => {
@@ -73,12 +80,14 @@ export default function RecruiterDashboard() {
             setLastName(userResponse.lastname);
 
             const jobQueryParams = {
-              recruiterIds: recruiterResponse[0]._id
+              recruiterIds: recruiterResponse[0]._id,
             };
             console.log("jobQueryParam", jobQueryParams);
             const jobPostingQueryString = new URLSearchParams(jobQueryParams);
 
-            let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(jobPostingQueryString);
+            let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(
+              jobPostingQueryString
+            );
             setJobPostingFormData(jobPostingResponse);
             console.log(jobPostingResponse);
             setExpanded(new Array(jobPostingResponse.length).fill(false));
@@ -98,7 +107,11 @@ export default function RecruiterDashboard() {
         <CssBaseline />
         {/* <Grid container spacing={2} alignItems="center" pt={5}> */}
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <Card raised={true} style={{ padding: "40px", height: "100%", marginTop: 4 }}>
+          <Card
+            raised={true}
+            style={{ padding: "40px", height: "100%", marginTop: 4 }}
+            className="text-center"
+          >
             <Avatar
               sx={{ height: "120px", width: "120px", margin: "auto" }}
               src={recruiterData && recruiterData.profile_picture}
@@ -107,22 +120,39 @@ export default function RecruiterDashboard() {
               <Typography gutterBottom variant="h5" component="div">
                 {firstName} {lastName}
               </Typography>
-              <Typography color="text.secondary">Recruiter at {recruiterData && recruiterData.company}</Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
-                <LocationOnOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                <Typography variant="body2" >
-                  {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state}, {recruiterData && recruiterData.country}
+              <Typography color="text.secondary">
+                Recruiter at {recruiterData && recruiterData.company}
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", pt: 3, justifyContent: "center" }}>
+                <LocationOnOutlinedIcon
+                  color="secondary"
+                  fontSize="small"
+                  sx={{ marginRight: 1 }}
+                />
+                <Typography variant="body2">
+                  {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state},{" "}
+                  {recruiterData && recruiterData.country}
                 </Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", pt: 2, justifyContent: "center" }}>
                 <EmailOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                <Link href={`mailto:${recruiterData && recruiterData.email}`} color="inherit" underline="hover">
+                <Link
+                  href={`mailto:${recruiterData && recruiterData.email}`}
+                  color="inherit"
+                  underline="hover"
+                >
                   {recruiterData && recruiterData.email}
                 </Link>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", pt: 2, justifyContent: "center" }}>
                 <LanguageOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                <Link href={recruiterData && recruiterData.website} color="inherit" underline="hover" target="_blank" rel="noopener noreferrer">
+                <Link
+                  href={recruiterData && recruiterData.website}
+                  color="inherit"
+                  underline="hover"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {recruiterData && recruiterData.website}
                 </Link>
               </Box>
@@ -134,17 +164,39 @@ export default function RecruiterDashboard() {
             </CardActions>
           </Card>
         </Grid>
-        <Typography sx={{ paddingTop: 2, marginLeft: 1 }} variant="h5">Jobs Posted</Typography>
+        <Typography sx={{ paddingTop: 2, marginLeft: 1, justifyContent: "center" }} variant="h5">
+          Jobs Posted
+        </Typography>
         <Grid container spacing={2} alignItems="left" pt={3}>
           {jobPostingFormData.map((jobPosting, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
-              <Card raised={true} style={{ height: "100%", paddingTop: 7, paddingLeft: 3 }}>
+              <Card
+                raised={true}
+                style={{ height: "100%", paddingTop: 7, paddingLeft: 3, justifyContent: "center" }}
+                className="text-center"
+              >
                 <CardActionArea component={Link} href={`/job-postings/${jobPosting._id}/shortlist`}>
-                  <CardHeader title={jobPosting.title} subheader={jobPosting.city + ', ' + jobPosting.state + ', ' + jobPosting.country} />
+                  <CardHeader
+                    title={jobPosting.title}
+                    subheader={
+                      jobPosting.city + ", " + jobPosting.state + ", " + jobPosting.country
+                    }
+                  />
                   <CardContent sx={{ paddingLeft: 1, paddingTop: 0 }}>
-                    <Chip icon={<LocalAtmIcon />} size="small" label={jobPosting.salary} color="success" />
+                    <Chip
+                      icon={<LocalAtmIcon />}
+                      size="small"
+                      label={jobPosting.salary}
+                      color="success"
+                    />
                     {jobPosting.full_time && (
-                      <Chip icon={<WorkOutlineIcon />} sx={{ marginLeft: 1 }} color="primary" size="small" label="Full Time" />
+                      <Chip
+                        icon={<WorkOutlineIcon />}
+                        sx={{ marginLeft: 1 }}
+                        color="primary"
+                        size="small"
+                        label="Full Time"
+                      />
                     )}
                     {jobPosting.remote && (
                       <Chip sx={{ marginLeft: 1 }} color="warning" size="small" label="Remote" />
@@ -152,20 +204,34 @@ export default function RecruiterDashboard() {
                     {jobPosting.hybrid && (
                       <Chip sx={{ marginLeft: 1 }} color="default" size="small" label="Hybrid" />
                     )}
-                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
-                      <Typography variant="body2" > <strong>Openings:</strong> {jobPosting.openings}
+                    <Box sx={{ display: "flex", alignItems: "center", pt: 3 }}>
+                      <Typography variant="body2">
+                        {" "}
+                        <strong>Openings:</strong> {jobPosting.openings}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
-                      <Typography variant="body2"> <strong>Experience: </strong> {jobPosting.experience} years
+                    <Box sx={{ display: "flex", alignItems: "center", pt: 1 }}>
+                      <Typography variant="body2">
+                        {" "}
+                        <strong>Experience: </strong> {jobPosting.experience} years
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", pt: 1 }}>
+                      <Typography variant="body2">
+                        {" "}
+                        Click to view the Candidates applied for this job
                       </Typography>
                     </Box>
                   </CardContent>
                   <CardActions disableSpacing>
-                    <IconButton href="/">
+                    <IconButton onClick={() => handleEditClick(jobPosting._id)}>
                       <EditNoteOutlinedIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleExpandClick(index)} aria-expanded={expanded[index]} aria-label="show more">
+                    <IconButton
+                      onClick={() => handleExpandClick(index)}
+                      aria-expanded={expanded[index]}
+                      aria-label="show more"
+                    >
                       <ExpandMoreIcon />
                     </IconButton>
                   </CardActions>
@@ -176,7 +242,7 @@ export default function RecruiterDashboard() {
                       <strong>Description:</strong> {jobPosting.description}
                     </Typography>
                     <Typography variant="body2" paragraph textAlign="justify">
-                      <strong>Skills:</strong> {jobPosting.skills.join(',')}
+                      <strong>Skills:</strong> {jobPosting.skills.join(",")}
                     </Typography>
                   </CardContent>
                 </Collapse>

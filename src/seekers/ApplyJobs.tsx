@@ -48,11 +48,11 @@ const ApplyJobs = () => {
 
   const handleApplyClick = async () => {
     // console.log("Applying for job:", selectedJob);
-    const seekers: any = await getSeekersByFilter(
-      new URLSearchParams(`userIds=${user._id}`)
-    );
+    const seekers: any = await getSeekersByFilter(new URLSearchParams(`userIds=${user._id}`));
 
-    const response = await applyJob(seekers[0], selectedJob._id);
+    const seeker: any = seekers[0];
+
+    const response = await applyJob(seeker._id, selectedJob._id);
     if (response) {
       setSelectedJob(response);
     }
@@ -197,14 +197,11 @@ const ApplyJobs = () => {
               >
                 Apply
               </Button>
-            ) : <button
-              className="btn btn-primary btn-outlined"
-              disabled
-
-              style={{ marginTop: 20 }}
-            >
-              Applied
-            </button>}
+            ) : (
+              <button className="btn btn-primary btn-outlined" disabled style={{ marginTop: 20 }}>
+                Applied
+              </button>
+            )}
           </Paper>
         )}
       </div>

@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from "react";
-import commonUtil from "../../utils/commonUtil.js";
+import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  IconButton,
+  Link,
+  Typography,
+} from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../AuthContext";
+import Copyright from "../../components/common/Copyright";
 import * as recruiterClient from "../../recruiters/client.ts";
 import * as userClient from "../../users/client.ts";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import {
-  Grid,
-  Box,
-  Typography,
-  Avatar,
-  Card,
-  CardContent,
-  Button,
-  IconButton,
-  CardActions,
-  Link,
-} from "@mui/material";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Collapse from "@mui/material/Collapse";
-import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
-import Copyright from "../../components/common/Copyright";
-import { AuthContext } from "../../AuthContext";
-import { useNavigate } from "react-router-dom";
+import commonUtil from "../../utils/commonUtil.js";
 
 export default function RecruiterDetail({ username }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -51,7 +51,7 @@ export default function RecruiterDetail({ username }) {
     setExpanded(!expanded);
   };
   const handleLogin = () => {
-    navigate(`/signin`);
+    navigate(`/signin?redirectUrl=${window.location.pathname}`);
   };
 
   useEffect(() => {
@@ -63,7 +63,6 @@ export default function RecruiterDetail({ username }) {
         if (CC_LOGIN_TOKENS && CC_LOGIN_TOKENS.length > 0) {
           const key = CC_LOGIN_TOKENS[0];
           user_id = Object.keys(key)[0];
-          console.log("key", user_id);
         } else {
           console.error("Not enough tokens present in auth");
         }
@@ -74,7 +73,6 @@ export default function RecruiterDetail({ username }) {
 
         let userResponse = await userClient.getUsersByFilter(userQueryString);
 
-        console.log("userResponse", userResponse);
         if (userResponse) {
           const queryParams = {
             userIds: userResponse[0]._id,
@@ -83,8 +81,6 @@ export default function RecruiterDetail({ username }) {
           const queryString = new URLSearchParams(queryParams);
 
           let recruiterResponse = await recruiterClient.getRecruitersByFilter(queryString);
-          console.log("user_id", user_id);
-          console.log("user_id2", userResponse[0]._id);
 
           if (user_id === userResponse[0]._id) {
             setUserBool(true);
@@ -93,7 +89,6 @@ export default function RecruiterDetail({ username }) {
           setRecruiterData(recruiterResponse[0]);
           setFirstName(userResponse[0].firstname);
           setLastName(userResponse[0].lastname);
-          console.log(recruiterData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -101,7 +96,7 @@ export default function RecruiterDetail({ username }) {
     }
 
     fetchData();
-  }, []);
+  }, [username]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from "react";
-import commonUtil from "../../utils/commonUtil.js";
-import * as seekerClient from "../../seekers/client.ts";
-import * as userClient from "../../users/client.ts";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import Container from "@mui/material/Container";
 import {
-  Grid,
   Box,
+  Button,
+  FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
-  Button,
-  Typography,
-  FormControl,
-  IconButton,
   Snackbar,
+  Typography
 } from "@mui/material";
-import Copyright from "../../components/common/Copyright";
-import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 import MuiAlert from "@mui/material/Alert";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Copyright from "../../components/common/Copyright";
+import * as seekerClient from "../../seekers/client.ts";
+import * as userClient from "../../users/client.ts";
+import commonUtil from "../../utils/commonUtil.js";
 
 export default function SeekerEdit() {
   const navigate = useNavigate();
@@ -69,7 +68,7 @@ export default function SeekerEdit() {
     try {
       const seekerResponse = await seekerClient.updateSeekers(seekerFormData);
       const userResponse = await userClient.updateUser(userFormData);
-      if (seekerResponse) {
+      if (seekerResponse && userResponse) {
         handleSnackbar("Congratulations, the changes have been saved.", "success");
         setTimeout(() => {
           navigate(`/seekers/${userFormData.username}`);

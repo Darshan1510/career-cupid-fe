@@ -22,7 +22,6 @@ export interface IJobPosting {
   experience: number;
 }
 
-
 export const updateJobPosting = async (jobPosting: any) => {
   let method = "PUT";
   let url = `${API_URL}/jobPostings/${jobPosting._id}`;
@@ -37,14 +36,12 @@ export const getJobPostingById = async (jobId: string) => {
   return response;
 };
 
-
 export const getAllJobPostings = async (queryParams: any) => {
   let method = "GET";
   let url = `${API_URL}/jobPostings`;
   const response = await commonUtil.httpRequest(url, method, {}, queryParams);
   return response;
 };
-
 
 export const createJobPosting = async (jobPosting: any) => {
   let method = "POST";
@@ -64,5 +61,12 @@ export const getJobPostingsByFilter = async (filters: any) => {
   let method = "GET";
   let url = `${API_URL}/jobPostings?${filters}`;
   const response = await commonUtil.httpRequest(url, method, {}, {});
+  return response;
+};
+
+export const shortlistSeeker = async (seekerId: any, jobPostingId: any) => {
+  let method = "POST";
+  let url = `${API_URL}/jobPostings/${jobPostingId}/shortlist-applicants`;
+  const response = await commonUtil.httpRequest(url, method, {}, { applicantId: seekerId });
   return response;
 };

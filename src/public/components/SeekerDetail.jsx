@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Box,
@@ -49,7 +49,6 @@ export default function SeekerDetail({ username }) {
         if (CC_LOGIN_TOKENS && CC_LOGIN_TOKENS.length > 0) {
           const key = CC_LOGIN_TOKENS[0];
           user_id = Object.keys(key)[0];
-          console.log("key", user_id);
         } else {
           console.error("Not enough tokens present in auth");
         }
@@ -60,7 +59,6 @@ export default function SeekerDetail({ username }) {
 
         let userResponse = await userClient.getUsersByFilter(userQueryString);
 
-        console.log("userResponse", userResponse);
         if (userResponse) {
           const queryParams = {
             user: userResponse[0]._id,
@@ -69,8 +67,6 @@ export default function SeekerDetail({ username }) {
           const queryString = new URLSearchParams(queryParams);
 
           let seekerResponse = await seekerClient.getSeekersByFilter(queryString);
-          console.log("user_id", user_id);
-          console.log("user_id2", userResponse[0]._id);
 
           if (user_id === userResponse[0]._id) {
             setUserBool(true);
@@ -79,7 +75,6 @@ export default function SeekerDetail({ username }) {
           setSeekerData(seekerResponse[0]);
           setFirstName(userResponse[0].firstname);
           setLastName(userResponse[0].lastname);
-          console.log(seekerData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -87,7 +82,7 @@ export default function SeekerDetail({ username }) {
     }
 
     fetchData();
-  }, []);
+  }, [username]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -210,14 +205,16 @@ export default function SeekerDetail({ username }) {
                         >
                           <Typography
                             fontSize={15}
-                            onMouseEnter={(e) => (
-                              (e.target.style.textDecoration = "underline"),
-                              (e.target.style.color = "blue")
-                            )}
-                            onMouseLeave={(e) => (
-                              (e.target.style.textDecoration = "none"),
-                              (e.target.style.color = "gray")
-                            )}
+                            onMouseEnter={(e) =>
+                              (e.target.style.textDecoration = "underline")(
+                                (e.target.style.color = "blue")
+                              )
+                            }
+                            onMouseLeave={(e) =>
+                              (e.target.style.textDecoration = "none")(
+                                (e.target.style.color = "gray")
+                              )
+                            }
                           >
                             {seekerData && seekerData.email}
                           </Typography>
@@ -301,14 +298,16 @@ export default function SeekerDetail({ username }) {
                         >
                           <Typography
                             fontSize={15}
-                            onMouseEnter={(e) => (
-                              (e.target.style.textDecoration = "underline"),
-                              (e.target.style.color = "blue")
-                            )}
-                            onMouseLeave={(e) => (
-                              (e.target.style.textDecoration = "none"),
-                              (e.target.style.color = "gray")
-                            )}
+                            onMouseEnter={(e) =>
+                              (e.target.style.textDecoration = "underline")(
+                                (e.target.style.color = "blue")
+                              )
+                            }
+                            onMouseLeave={(e) =>
+                              (e.target.style.textDecoration = "none")(
+                                (e.target.style.color = "gray")
+                              )
+                            }
                           >
                             {seekerData && seekerData.resume}
                           </Typography>

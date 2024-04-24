@@ -1,8 +1,7 @@
+import { Avatar, Card, CardContent, Typography } from "@mui/material";
+import React from "react";
 import * as recruiterClient from "../../recruiters/client";
 import * as userClient from "../../users/client";
-import React from "react";
-import { Card, CardContent, Typography, Avatar } from "@mui/material";
-import { on } from "events";
 
 export default function RecruiterList() {
   let [recruiters, setRecruiters] = React.useState([]);

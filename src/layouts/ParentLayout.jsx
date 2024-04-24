@@ -1,10 +1,8 @@
-import { AuthContext } from "../AuthContext";
+import React from "react";
 import commonUtil from "../utils/commonUtil";
 import Header from "./Header";
-import React from "react";
 
 export default function Layout({ children }) {
-  const me = React.useContext(AuthContext);
   let [allowAccess, setAllowAccess] = React.useState(false);
 
   const checkLogin = async () => {
@@ -20,7 +18,7 @@ export default function Layout({ children }) {
 
   React.useEffect(() => {
     checkLogin();
-  }, [window.location.href]);
+  }, []);
 
   return (
     <div>

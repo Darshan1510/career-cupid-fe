@@ -1,7 +1,6 @@
 import React from "react";
-import Layout from "../../layouts/ParentLayout";
-import CompanyList from "../components/CompanyList";
 import * as levelsFyiClient from "../../externalApis/levelsFyiClient";
+import CompanyList from "../components/CompanyList";
 
 export default function WelcomePage() {
   let [topCompanies, setTopCompanies] = React.useState([]);

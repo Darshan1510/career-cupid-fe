@@ -1,25 +1,23 @@
-import * as React from "react";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import * as React from "react";
 
-import Typography from "@mui/material/Typography";
+import { FormControl, FormLabel, Radio, RadioGroup } from "@mui/material";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as client from "../client";
-import commonUtil from "../../utils/commonUtil";
+import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import Copyright from "../../components/common/Copyright";
-import { FormControl, FormLabel, Radio, RadioGroup } from "@mui/material";
-import useLoading from "../../hooks/useLoading";
 import Spinner from "../../components/common/Spinner";
+import useLoading from "../../hooks/useLoading";
+import * as client from "../client";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -31,18 +29,9 @@ export default function SignUp() {
   let [email, setEmail] = React.useState();
   let [role, setRole] = React.useState("RECRUITER");
   let [username, setUsername] = React.useState();
-  let [usernameExists, setUsernameExists] = React.useState();
+
   let navigate = useNavigate();
   const [loading, withLoading] = useLoading();
-
-  const handleCheckUsernameAvailibility = async () => {
-    const exists = await client.getUsersByFilter(new URLSearchParams(`username=${username}`));
-    if (exists) {
-      setUsernameExists(true);
-    } else {
-      setUsernameExists(false);
-    }
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,12 +44,11 @@ export default function SignUp() {
     user["username"] = username;
     user["role"] = role;
 
-    console.log(user);
-
     let createdUser = await withLoading(client.register, user);
 
     if (createdUser) {
       alert("Please verify your email to proceed further");
+      navigate("/signin");
     }
   };
 

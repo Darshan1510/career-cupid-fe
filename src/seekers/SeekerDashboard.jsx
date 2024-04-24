@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react";
-import commonUtil from "../utils/commonUtil.js";
-import * as seekerClient from "../seekers/client.ts";
-import * as userClient from "../users/client.ts";
-import * as jobPostingClient from "../jobPostings/client.ts";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import {
-  Grid,
-  Box,
-  Typography,
-  Avatar,
-  Card,
-  CardContent,
-  Chip,
-  CardHeader,
-  Link,
-  IconButton,
-  CardActions,
-} from "@mui/material";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import React, { useEffect } from "react";
+import * as jobPostingClient from "../jobPostings/client.ts";
+import * as seekerClient from "../seekers/client.ts";
+import * as userClient from "../users/client.ts";
+import commonUtil from "../utils/commonUtil.js";
 
 export default function SeekerDashboard() {
   const defaultTheme = createTheme();
@@ -57,7 +56,6 @@ export default function SeekerDashboard() {
         setUserID(user_id);
         if (user_id) {
           let userResponse = await userClient.getUserById(user_id);
-          console.log(user_id);
 
           if (userResponse && userResponse._id === user_id) {
             const queryParams = {
@@ -78,14 +76,12 @@ export default function SeekerDashboard() {
             const jobQueryParams = {
               applicants: seekerResponse[0]._id,
             };
-            console.log("jobQueryParams", jobQueryParams);
             const jobPostingQueryString = new URLSearchParams(jobQueryParams).toString();
 
             let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(
               jobPostingQueryString
             );
             setJobPostingFormData(jobPostingResponse);
-            console.log(jobPostingResponse);
             setExpanded(new Array(jobPostingResponse.length).fill(false));
           }
         }
@@ -103,7 +99,11 @@ export default function SeekerDashboard() {
         <CssBaseline />
 
         <Grid item xs={12} sm={6} md={4} lg={4}>
-          <Card raised="true" style={{ padding: "40px", height: "100%", marginTop: 4 }}>
+          <Card
+            raised="true"
+            style={{ padding: "40px", height: "100%", marginTop: 4 }}
+            className="text-center"
+          >
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
                 sx={{ height: "120px", width: "120px" }}
@@ -112,7 +112,7 @@ export default function SeekerDashboard() {
               <CardHeader
                 title={firstName + " " + lastName}
                 subheader={
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <LocationOnOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} />
                     {`${seekerData.city}, ${seekerData.state}, ${seekerData.country}`}
                   </Box>
@@ -120,7 +120,7 @@ export default function SeekerDashboard() {
               />
             </Box>
             <CardContent>
-              <Box sx={{ mt: 2, width: "100%" }}>
+              <Box sx={{ mt: 2, width: "100%", justifyContent: "center" }}>
                 <Typography variant="body2" color="text.secondary" textAlign="justify">
                   {seekerData && seekerData.bio}
                 </Typography>
@@ -145,7 +145,7 @@ export default function SeekerDashboard() {
         <Grid container spacing={2} alignItems="left" pt={3}>
           {jobPostingFormData.map((jobPosting, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
-              <Card raised={true} style={{ marginLeft: 10 }}>
+              <Card raised={true} style={{ marginLeft: 10 }} className="text-center">
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Avatar
                     sx={{ height: "50px", width: "50px", marginLeft: 2 }}

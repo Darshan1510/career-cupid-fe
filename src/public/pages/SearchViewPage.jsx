@@ -20,7 +20,7 @@ export default function SearchViewPage() {
       const jobSearches = await levelsFyiClient.getJobSearches(keyword);
       setJobSearches(jobSearches.results);
     })();
-  }, []);
+  }, [keyword]);
 
   return (
     <div className="container">

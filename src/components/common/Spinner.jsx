@@ -2,7 +2,7 @@ import React from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Spinner({ loading }) {
-  let [color, setColor] = React.useState("#ffffff");
+  let color = React.useState("#ffffff");
   return (
     <div>
       <ClipLoader

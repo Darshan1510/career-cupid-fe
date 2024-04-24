@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { shortlistSeeker } from "./client";
+import { shortlistSeeker } from "../jobPostings/client";
 import { getSeekersByFilter } from "../seekers/client";
 import * as userClient from "../users/client";
 import {
@@ -56,7 +56,7 @@ const ShortlistCandidates = () => {
 
   const handleShortlistClick = async () => {
     // console.log("Shortlisting for job:", selectedSeeker);
-    const response: any = await shortlistSeeker(selectedSeeker._id);
+    const response: any = await shortlistSeeker(selectedSeeker._id, jobPostingId);
     if (response) {
       setLastJob(response);
     }

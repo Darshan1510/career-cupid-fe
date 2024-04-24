@@ -49,7 +49,6 @@ export default function CreateJobPosting() {
   let [skills, setSkills] = React.useState([]);
   let [experience, setExperience] = React.useState(0);
   let [recruiterId, setRecruiterId] = React.useState("");
-  let [recruiterCompany, setRecruiterCompany] = React.useState("");
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
@@ -165,9 +164,6 @@ export default function CreateJobPosting() {
 
             if (Array.isArray(recruiterResponse) && recruiterResponse.length > 0) {
               setRecruiterId(recruiterResponse[0]._id);
-              setCompany(recruiterResponse[0].company);
-
-
             } else {
               console.log("Recruiter response is empty or not an array.");
             }
@@ -208,12 +204,13 @@ export default function CreateJobPosting() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="Company Name"
+                  required
                   fullWidth
                   id="company"
                   label="Company Name"
                   autoFocus
-                  value={company}
-                  disabled
+                  value={company || ""}
+                  onChange={(event) => setCompany(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

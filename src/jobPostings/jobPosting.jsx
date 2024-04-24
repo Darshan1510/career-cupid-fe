@@ -49,6 +49,7 @@ export default function CreateJobPosting() {
   let [skills, setSkills] = React.useState([]);
   let [experience, setExperience] = React.useState(0);
   let [recruiterId, setRecruiterId] = React.useState("");
+  let [recruiterCompany, setRecruiterCompany] = React.useState("");
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
@@ -114,6 +115,10 @@ export default function CreateJobPosting() {
     "Automotive",
   ];
 
+  const handleCancel = () => {
+    navigate(`/recruiters/dashboard`);
+};
+
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -151,7 +156,7 @@ export default function CreateJobPosting() {
 
           if (userResponse && userResponse._id === user_id) {
             const queryParams = {
-              user: user_id,
+              userIds: user_id,
             };
 
             const queryString = new URLSearchParams(queryParams).toString();
@@ -160,6 +165,9 @@ export default function CreateJobPosting() {
 
             if (Array.isArray(recruiterResponse) && recruiterResponse.length > 0) {
               setRecruiterId(recruiterResponse[0]._id);
+              setCompany(recruiterResponse[0].company);
+
+
             } else {
               console.log("Recruiter response is empty or not an array.");
             }
@@ -200,13 +208,12 @@ export default function CreateJobPosting() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   name="Company Name"
-                  required
                   fullWidth
                   id="company"
                   label="Company Name"
                   autoFocus
-                  value={company || ""}
-                  onChange={(event) => setCompany(event.target.value)}
+                  value={company}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -397,6 +404,9 @@ export default function CreateJobPosting() {
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Submit
+            </Button>
+            <Button onClick={handleCancel} fullWidth color="error" variant="contained" sx={{ mt: 2, mb: 2 }}>
+              Cancel
             </Button>
           </Box>
         </Box>

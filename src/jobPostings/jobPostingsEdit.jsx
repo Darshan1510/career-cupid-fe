@@ -23,7 +23,7 @@ import MuiAlert from '@mui/material/Alert';
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function JobPostingsEdit() {
+export default function JobPostingEdit() {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
@@ -147,7 +147,7 @@ useEffect(() => {
           const reruiterQueryString = new URLSearchParams(recruiterQueryParams);
 
           let recruiterResponse = await recruiterClient.getRecruitersByFilter(reruiterQueryString);
-           
+         
        
           const queryParams = {
             recruiterIds: recruiterResponse[0]._id,

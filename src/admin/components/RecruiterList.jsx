@@ -46,6 +46,12 @@ export default function RecruiterList() {
   const onApprove = async (recruiter) => {
     let updatedRecruiter = await recruiterClient.approveRecruiter(recruiter._id);
     if (updatedRecruiter) {
+      let users = await userClient.getUsersByFilter(
+        new URLSearchParams(`userIds=${updatedRecruiter.user}`)
+      );
+      let user = users[0];
+      updatedRecruiter = { ...updatedRecruiter, ...user };
+      delete user._id;
       let updatedRecruiters = recruiters.map((recruiter) => {
         return recruiter._id === updatedRecruiter._id ? updatedRecruiter : recruiter;
       });

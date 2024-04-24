@@ -7,9 +7,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Work from "@mui/icons-material/Work";
-import * as recruiterClient from "../recruiters/client.ts";
-import * as userClient from "../users/client.ts";
-import commonUtil from "../utils/commonUtil.js";
+import * as recruiterClient from "../recruiters/client";
+import * as userClient from "../users/client";
+import commonUtil from "../utils/commonUtil";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -80,6 +80,7 @@ export default function CreateJobPosting() {
       const response = await client.createJobPosting(jobPosting);
       if (response) {
         handleSnackbar("Congratulations, the job has been posted.", "success");
+        navigate("/recruiters/dashboard");
     } 
   } catch (error) {
       handleSnackbar("Error posting the job. Please try again.","error");

@@ -62,7 +62,6 @@ const removeCurrentLogin = (userId) => {
   auth = JSON.parse(auth);
   auth.CC_LOGIN_TOKENS = tokens;
   localStorage.setItem("CCAUTH", JSON.stringify(auth));
-  window.location.href = "/signin";
 };
 
 const logout = (redirectUrl) => {

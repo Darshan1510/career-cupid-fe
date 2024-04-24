@@ -68,6 +68,7 @@ const RecruiterSignUp = () => {
             const createdUser = await createRecruiter(formData);
             if (createdUser) {
                 handleSnackbar("Thank you for filling out the form, we shall update you once you are approved/rejected.", "success");
+                window.location.href= "/recruiters/dashboard";
             }
         } catch (error) {
             console.error("Error registering user:", error);

@@ -49,8 +49,8 @@ export default function RecruiterList() {
         new URLSearchParams(`userIds=${updatedRecruiter.user}`)
       );
       let user = users[0];
-      updatedRecruiter = { ...updatedRecruiter, ...user };
       delete user._id;
+      updatedRecruiter = { ...updatedRecruiter, ...user };
       let updatedRecruiters = recruiters.map((recruiter) => {
         return recruiter._id === updatedRecruiter._id ? updatedRecruiter : recruiter;
       });

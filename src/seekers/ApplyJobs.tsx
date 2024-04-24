@@ -21,33 +21,34 @@ const ApplyJobs = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const queryParams = {
-        user: user._id,
-      };
-      const queryString = new URLSearchParams(queryParams).toString();
-      const seekers: any = await getSeekersByFilter(queryString);
-
-      try {
+      if (user && user._id) {
         const queryParams = {
-          skills: seekers[0].skills,
+          user: user._id,
         };
         const queryString = new URLSearchParams(queryParams).toString();
-        console.log("Query string:", queryString);
-        const jobPostingsData: any = await getJobPostingsByFilter(queryString);
-        setJobPostings(jobPostingsData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const seekers: any = await getSeekersByFilter(queryString);
+
+        try {
+          const queryParams = {
+            skills: seekers[0].skills,
+          };
+          const queryString = new URLSearchParams(queryParams).toString();
+          console.log("Query string:", queryString);
+          const jobPostingsData: any = await getJobPostingsByFilter(queryString);
+          setJobPostings(jobPostingsData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
     fetchData();
-  }, [user._id]);
+  }, [user && user._id]);
 
   const handleJobClick = (job: any) => {
     setSelectedJob(job);
   };
 
   const handleApplyClick = async () => {
-    // console.log("Applying for job:", selectedJob);
     const seekers: any = await getSeekersByFilter(new URLSearchParams(`userIds=${user._id}`));
 
     const seeker: any = seekers[0];
@@ -63,35 +64,41 @@ const ApplyJobs = () => {
     <div style={{ display: "flex" }} className="mt-3 m-5">
       {/* Left pane for job listings */}
       <div style={{ flex: "0 1 20%", overflow: "auto" }}>
-        <Typography style={{ color: "grey" }} variant="h6">
-          Click on a job to view details
-        </Typography>
-        <List>
-          {jobPostings.map((jobPosting: any) => (
-            <ListItem
-              key={jobPosting._id}
-              onClick={() => handleJobClick(jobPosting)}
-              className="shadow-sm"
-              component={Button}
-              style={{ textTransform: "none" }}
-            >
-              <ListItemAvatar>
-                <Avatar alt={jobPosting.company} src={jobPosting.company_logo} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={jobPosting.title}
-                secondary={
-                  <div>
-                    {jobPosting.company}
-                    <br />
-                    {jobPosting.city}, {jobPosting.state}, {jobPosting.country}
-                  </div>
-                }
-                secondaryTypographyProps={{ component: "div" }}
-              />
-            </ListItem>
-          ))}
-        </List>
+        {jobPostings && jobPostings.length > 0 ? (
+          <div>
+            <Typography style={{ color: "grey" }} variant="h6">
+              Click on a job to view details
+            </Typography>
+            <List>
+              {jobPostings.map((jobPosting: any) => (
+                <ListItem
+                  key={jobPosting._id}
+                  onClick={() => handleJobClick(jobPosting)}
+                  className="shadow-sm"
+                  component={Button}
+                  style={{ textTransform: "none" }}
+                >
+                  <ListItemAvatar>
+                    <Avatar alt={jobPosting.company} src={jobPosting.company_logo} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={jobPosting.title}
+                    secondary={
+                      <div>
+                        {jobPosting.company}
+                        <br />
+                        {jobPosting.city}, {jobPosting.state}, {jobPosting.country}
+                      </div>
+                    }
+                    secondaryTypographyProps={{ component: "div" }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        ) : (
+          <h4>There are no Job postings at the moment</h4>
+        )}
       </div>
 
       {/* Right pane for detailed job preview */}

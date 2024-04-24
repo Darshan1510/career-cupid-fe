@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Box, Typography, Avatar,Card,CardContent, IconButton} from "@mui/material";
+import { Grid, Box, Typography, Avatar,Card,CardContent, IconButton, Button} from "@mui/material";
 import commonUtil from "../../utils/commonUtil.js";
 import * as seekerClient from "../../seekers/client.ts";
 import * as userClient from "../../users/client.ts";
@@ -16,6 +16,9 @@ import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import { AuthContext } from "../../AuthContext";
+import { useNavigate } from "react-router-dom"; 
+
 
 export default function SeekerDetail({username}) {
   const defaultTheme = createTheme();
@@ -23,8 +26,12 @@ export default function SeekerDetail({username}) {
   const [firstName,setFirstName] = React.useState("");
   const [lastName,setLastName] = React.useState("");
   const [userBool, setUserBool] = React.useState(false);
+  const authUser = React.useContext(AuthContext);
+  const navigate = useNavigate();
 
-
+  const handleLogin = () => {
+    navigate(`/signin`);
+  }
   useEffect(() => {
     async function fetchData() {
       try {
@@ -86,8 +93,8 @@ export default function SeekerDetail({username}) {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="lg">
         <CssBaseline /> 
-        <Grid  sx={{
-            marginTop: 8}} container spacing={2}>
+        <Grid  sx={{marginTop: 8}} container spacing={2}>
+        {authUser && authUser.hasOwnProperty("email") ?  (
           <Grid item xs={12} sm={4}>
             <Card raised="true" style={{ padding: "40px", height: "100%" }}>
               <Avatar 
@@ -111,7 +118,28 @@ export default function SeekerDetail({username}) {
               </Box>
           </CardContent>
             </Card>
-          </Grid>
+          </Grid> ) :(
+             <Grid item xs={12} sm={4}>
+             <Card raised="true" style={{ padding: "40px", height: "100%" }}>
+               <Avatar 
+                 sx={{ height: "120px", width: "120px", margin: "auto" }}
+               />
+               <CardContent>             
+               <Typography gutterBottom variant="h5" component="div">
+                {firstName} {lastName}
+                </Typography>
+                 <Box sx={{ display: 'flex', alignItems: 'center', marginLeft:'65px' }}>
+                   <LocationOnOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} /> 
+                   <Typography variant="body2" color="text.secondary">
+                     {seekerData && seekerData.city}, {seekerData && seekerData.state}, {seekerData && seekerData.country}
+                   </Typography>
+                 </Box>
+           </CardContent>
+             </Card>
+           </Grid>
+          )}
+
+        {authUser && authUser.hasOwnProperty("email") ?  (
           <Grid item xs={12} sm={8}>
         <Box
           sx={{
@@ -164,8 +192,6 @@ export default function SeekerDetail({username}) {
                   </Grid>
                 </Grid> 
             </Box>
-
-
             <Box component="form" sx={{ border: '1px solid lightgray', 
                   padding: 2,width: '80%',marginLeft:10}}>
             <Grid container spacing={1}>
@@ -179,12 +205,9 @@ export default function SeekerDetail({username}) {
           </Grid>
           <Grid item sx={{ marginLeft: 5.5}} >
           <Typography color={"GrayText"} fontSize={15}>{seekerData && seekerData.education}</Typography>
-
           </Grid>
         </Grid>  
-
     </Box>
-
     <Box component="form" sx={{ border: '1px solid lightgray', 
                   padding: 2,width: '80%',marginLeft:10}}>
           
@@ -249,8 +272,6 @@ export default function SeekerDetail({username}) {
           </Grid>
       </Grid>
     </Box>
-
-
     <Box component="form" sx={{ border: '1px solid lightgray', 
                   padding: 2,width: '80%',marginLeft:10}}>
           
@@ -271,7 +292,46 @@ export default function SeekerDetail({username}) {
 
     </Box>
     </Box>
-    </Grid>
+    </Grid> ) : (
+           <Grid item xs={12} sm={8}>
+           <Box
+             sx={{
+               display: "flex",
+               flexDirection: "column",
+               alignItems: "left",
+             }}>
+               <Grid container alignItems="center">
+               <Grid item xs={6} md={4}>
+                     <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 12 }}>
+                       <AccountCircleOutlinedIcon fontSize="large" color="primary" sx={{ marginRight: 1 }} />
+                       <Typography variant="h5">About</Typography>
+                     </Box>
+                   </Grid>
+             </Grid>
+               <Grid item xs={12}>
+                 <Divider sx={{ marginY: 2, borderBottom: '1px solid black', width: '80%',marginLeft:10 }} />
+               </Grid>
+               <Grid  container spacing={1}>
+              <Grid item xs={12} sm={4} sx={{marginLeft:3}}>
+                <Box sx={{ textAlign: 'right' }}>
+                <Button 
+                  onClick={handleLogin}
+                  variant="contained"  
+                  color="primary"   
+                  sx={{               
+                    display: 'block', 
+                    margin: 'auto',   
+                    marginLeft: 5           
+                    }}>
+                   Sign In to view more
+                  </Button>
+                    </Box>
+                  </Grid>
+                </Grid> 
+               </Box>
+               </Grid>
+    )
+    }
     </Grid>
     </Container>
     </ThemeProvider>

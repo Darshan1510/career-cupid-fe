@@ -15,6 +15,7 @@ import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
+import { useNavigate } from "react-router-dom"; 
 
 export default function RecruiterDashboard() {
   const defaultTheme = createTheme();
@@ -23,7 +24,7 @@ export default function RecruiterDashboard() {
   const [lastName, setLastName] = React.useState("");
   const [jobPostingFormData, setJobPostingFormData] = React.useState([]);
   const [recruiterData, setRecruiterData] = React.useState([]);
-
+  let navigate = useNavigate();
   const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
@@ -35,12 +36,17 @@ export default function RecruiterDashboard() {
     }),
   }));
 
+
   const handleExpandClick = (index) => {
     
     const newExpanded = [...expanded];
     newExpanded[index] = !newExpanded[index];
     setExpanded(newExpanded);
   };
+
+  const handleEditClick = (jobPostingId) =>{
+    navigate(`/job-posting/${jobPostingId}`);
+  }
   
   useEffect(() => {
     async function fetchData() {
@@ -161,7 +167,7 @@ export default function RecruiterDashboard() {
                   </Box>
                 </CardContent>
                 <CardActions disableSpacing>
-                <IconButton href="/">  
+                <IconButton onClick={()=>handleEditClick(jobPosting._id)}>  
                       <EditNoteOutlinedIcon /> 
                     </IconButton>
                   <IconButton onClick={() => handleExpandClick(index)} aria-expanded={expanded[index]} aria-label="show more">

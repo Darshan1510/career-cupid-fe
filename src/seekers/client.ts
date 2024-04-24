@@ -57,22 +57,10 @@ export const updateSeekers = async (seekers: any) => {
   return response;
 };
 
-// Get job postings (TODO: get only the ones where the seeker did not pply so far)
-export const getJobPostings = async () => {
-  let method = "GET";
-  let url = `${API_URL}/jobPostings`;
-  const response = await commonUtil.httpRequest(url, method, {}, {});
-  return response;
-};
-
-export const applyJob = async (jobId: string) => {
-  let CC_LOGIN_TOKENS = commonUtil.getLoginTokens();
-  const id = CC_LOGIN_TOKENS[0];
-  const key = Object.keys(id)[0];
-
+export const applyJob = async (seekerId: string, jobId: string) => {
   let method = "POST";
   let url = `${API_URL}/jobPostings/${jobId}/applicants`;
-  const response = await commonUtil.httpRequest(url, method, {}, { applicantId: key });
+  const response = await commonUtil.httpRequest(url, method, {}, { applicantId: seekerId });
 
   return response;
 };

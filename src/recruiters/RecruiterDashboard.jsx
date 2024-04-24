@@ -6,7 +6,7 @@ import * as jobPostingClient from "../jobPostings/client.ts";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
-import { Grid, Box, Typography, Avatar, Card, CardContent, Chip, CardHeader, Link, IconButton,CardActions } from "@mui/material";
+import { Grid, Box, Typography, Avatar, Card, CardActionArea, CardContent, Chip, CardHeader, Link, IconButton, CardActions } from "@mui/material";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
@@ -36,12 +36,12 @@ export default function RecruiterDashboard() {
   }));
 
   const handleExpandClick = (index) => {
-    
+
     const newExpanded = [...expanded];
     newExpanded[index] = !newExpanded[index];
     setExpanded(newExpanded);
   };
-  
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -75,7 +75,7 @@ export default function RecruiterDashboard() {
             const jobQueryParams = {
               recruiterIds: recruiterResponse[0]._id
             };
-            console.log("jobQueryParam",jobQueryParams);
+            console.log("jobQueryParam", jobQueryParams);
             const jobPostingQueryString = new URLSearchParams(jobQueryParams);
 
             let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(jobPostingQueryString);
@@ -97,88 +97,89 @@ export default function RecruiterDashboard() {
       <Container component="main" maxWidth="lg">
         <CssBaseline />
         {/* <Grid container spacing={2} alignItems="center" pt={5}> */}
-          <Grid item xs={12} sm={6} md={4} lg={4}>
-            <Card raised={true} style={{ padding: "40px", height: "100%",marginTop:4  }}>
-              <Avatar
-                sx={{ height: "120px", width: "120px", margin: "auto" }}
-                src={recruiterData && recruiterData.profile_picture}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {firstName} {lastName}
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+          <Card raised={true} style={{ padding: "40px", height: "100%", marginTop: 4 }}>
+            <Avatar
+              sx={{ height: "120px", width: "120px", margin: "auto" }}
+              src={recruiterData && recruiterData.profile_picture}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {firstName} {lastName}
+              </Typography>
+              <Typography color="text.secondary">Recruiter at {recruiterData && recruiterData.company}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
+                <LocationOnOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
+                <Typography variant="body2" >
+                  {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state}, {recruiterData && recruiterData.country}
                 </Typography>
-                <Typography color="text.secondary">Recruiter at {recruiterData && recruiterData.company}</Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
-                  <LocationOnOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                  <Typography variant="body2" >
-                    {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state}, {recruiterData && recruiterData.country}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
-                  <EmailOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                  <Link href={`mailto:${recruiterData && recruiterData.email}`} color="inherit" underline="hover">
-                    {recruiterData && recruiterData.email}
-                  </Link>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
-                  <LanguageOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                  <Link href={recruiterData && recruiterData.website} color="inherit" underline="hover" target="_blank" rel="noopener noreferrer">
-                    {recruiterData && recruiterData.website}
-                  </Link>
-                </Box>
-              </CardContent>
-              <CardActions>
-                    <IconButton href="/recruiters/edit">  
-                      <EditNoteOutlinedIcon /> 
-                    </IconButton>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Typography sx={{paddingTop:2,marginLeft:1}} variant="h5">Jobs Posted</Typography>
-             <Grid container spacing={2} alignItems="left" pt={3}>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
+                <EmailOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
+                <Link href={`mailto:${recruiterData && recruiterData.email}`} color="inherit" underline="hover">
+                  {recruiterData && recruiterData.email}
+                </Link>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
+                <LanguageOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
+                <Link href={recruiterData && recruiterData.website} color="inherit" underline="hover" target="_blank" rel="noopener noreferrer">
+                  {recruiterData && recruiterData.website}
+                </Link>
+              </Box>
+            </CardContent>
+            <CardActions>
+              <IconButton href="/recruiters/edit">
+                <EditNoteOutlinedIcon />
+              </IconButton>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Typography sx={{ paddingTop: 2, marginLeft: 1 }} variant="h5">Jobs Posted</Typography>
+        <Grid container spacing={2} alignItems="left" pt={3}>
           {jobPostingFormData.map((jobPosting, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
-              <Card raised={true} style={{ height: "100%", paddingTop: 7,paddingLeft:3 }}>
-                <CardHeader title={jobPosting.title} subheader={jobPosting.city + ', ' + jobPosting.state + ', ' + jobPosting.country} />
-                <CardContent sx={{ paddingLeft: 1,paddingTop:0 }}>
-                  <Chip icon={<LocalAtmIcon />} size="small" label={jobPosting.salary} color="success" />
-                  {jobPosting.full_time && (
-                    <Chip icon={<WorkOutlineIcon />} sx={{ marginLeft: 1 }} color="primary" size="small" label="Full Time" />
-                  )}
-                  {jobPosting.remote && (
-                    <Chip sx={{ marginLeft: 1 }} color="warning" size="small" label="Remote" />
-                  )}
-                  {jobPosting.hybrid && (
-                    <Chip sx={{ marginLeft: 1 }} color="default" size="small" label="Hybrid" />
-                  )}
-                   <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
-                    <Typography variant="body2" > <strong>Openings:</strong> {jobPosting.openings}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
-                    <Typography variant="body2"> <strong>Experience: </strong> {jobPosting.experience} years
-                    </Typography>
-                  </Box>
-                </CardContent>
-                <CardActions disableSpacing>
-                <IconButton href="/">  
-                      <EditNoteOutlinedIcon /> 
+              <Card raised={true} style={{ height: "100%", paddingTop: 7, paddingLeft: 3 }}>
+                <CardActionArea component={Link} href={`/job-postings/${jobPosting._id}/shortlist`}>
+                  <CardHeader title={jobPosting.title} subheader={jobPosting.city + ', ' + jobPosting.state + ', ' + jobPosting.country} />
+                  <CardContent sx={{ paddingLeft: 1, paddingTop: 0 }}>
+                    <Chip icon={<LocalAtmIcon />} size="small" label={jobPosting.salary} color="success" />
+                    {jobPosting.full_time && (
+                      <Chip icon={<WorkOutlineIcon />} sx={{ marginLeft: 1 }} color="primary" size="small" label="Full Time" />
+                    )}
+                    {jobPosting.remote && (
+                      <Chip sx={{ marginLeft: 1 }} color="warning" size="small" label="Remote" />
+                    )}
+                    {jobPosting.hybrid && (
+                      <Chip sx={{ marginLeft: 1 }} color="default" size="small" label="Hybrid" />
+                    )}
+                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
+                      <Typography variant="body2" > <strong>Openings:</strong> {jobPosting.openings}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
+                      <Typography variant="body2"> <strong>Experience: </strong> {jobPosting.experience} years
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <IconButton href="/">
+                      <EditNoteOutlinedIcon />
                     </IconButton>
-                  <IconButton onClick={() => handleExpandClick(index)} aria-expanded={expanded[index]} aria-label="show more">
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </CardActions>
+                    <IconButton onClick={() => handleExpandClick(index)} aria-expanded={expanded[index]} aria-label="show more">
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+                </CardActionArea>
                 <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography variant="body2" paragraph textAlign="justify">
-                  <strong>Description:</strong> {jobPosting.description}
-                </Typography>
-                <Typography variant="body2" paragraph textAlign="justify">
-                  <strong>Skills:</strong> {jobPosting.skills.join(',')}
-                </Typography>
-              </CardContent>
-            </Collapse>
-
+                  <CardContent>
+                    <Typography variant="body2" paragraph textAlign="justify">
+                      <strong>Description:</strong> {jobPosting.description}
+                    </Typography>
+                    <Typography variant="body2" paragraph textAlign="justify">
+                      <strong>Skills:</strong> {jobPosting.skills.join(',')}
+                    </Typography>
+                  </CardContent>
+                </Collapse>
               </Card>
             </Grid>
           ))}

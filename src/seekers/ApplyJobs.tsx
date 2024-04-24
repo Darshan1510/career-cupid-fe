@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { applyJob, getJobPostings } from "./client";
+import { applyJob, getSeekersByFilter } from "./client";
+import { getJobPostingsByFilter } from "../jobPostings/client";
 import {
   List,
   ListItem,
@@ -11,30 +12,50 @@ import {
   Avatar,
   Chip,
 } from "@mui/material";
+import { AuthContext } from "../AuthContext";
 
 const ApplyJobs = () => {
   const [jobPostings, setJobPostings] = useState([]);
   const [selectedJob, setSelectedJob] = useState<any>(null);
+  const user: any = React.useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
+      const queryParams = {
+        user: user._id,
+      };
+      const queryString = new URLSearchParams(queryParams).toString();
+      const seekers: any = await getSeekersByFilter(queryString);
+
       try {
-        const jobPostingsData: any = await getJobPostings();
+        const queryParams = {
+          skills: seekers[0].skills,
+        };
+        const queryString = new URLSearchParams(queryParams).toString();
+        console.log("Query string:", queryString);
+        const jobPostingsData: any = await getJobPostingsByFilter(queryString);
         setJobPostings(jobPostingsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [user._id]);
 
   const handleJobClick = (job: any) => {
     setSelectedJob(job);
   };
 
-  const handleApplyClick = () => {
+  const handleApplyClick = async () => {
     // console.log("Applying for job:", selectedJob);
-    applyJob(selectedJob._id);
+    const seekers: any = await getSeekersByFilter(
+      new URLSearchParams(`userIds=${user._id}`)
+    );
+
+    const response = await applyJob(seekers[0], selectedJob._id);
+    if (response) {
+      setSelectedJob(response);
+    }
     alert("Thanks for applying!");
   };
 
@@ -165,15 +186,25 @@ const ApplyJobs = () => {
                 </tr>
               </tbody>
             </table>
-            {/* Apply button */}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleApplyClick}
+            {/* Apply button - enabled only if the seeker hasn't applied */}
+            {!selectedJob.applicants.includes(user._id) ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleApplyClick}
+                style={{ marginTop: 20, textTransform: "none" }}
+                disableElevation
+              >
+                Apply
+              </Button>
+            ) : <button
+              className="btn btn-primary btn-outlined"
+              disabled
+
               style={{ marginTop: 20 }}
             >
-              Apply
-            </Button>
+              Applied
+            </button>}
           </Paper>
         )}
       </div>

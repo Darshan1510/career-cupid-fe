@@ -25,6 +25,7 @@ import SeekerDashboard from "./seekers/SeekerDashboard";
 import ApplyJobs from "./seekers/ApplyJobs";
 import ShortlistCandidates from "./recruiters/ShortlistCandidates";
 import JobPostingsEdit from "./jobPostings/JobPostingEdit";
+import JobPostingEdit from "./jobPostings/JobPostingEdit";
 
 function App() {
   let [user, setUser] = React.useState({});
@@ -72,7 +73,7 @@ function App() {
                 path="/job-postings/:jobPostingId/shortlist"
                 element={<ShortlistCandidates />}
               />
-              <Route path="/job-postings/:jobPostingId/edit" element={<JobPostingsEdit />} />
+              <Route path="/job-postings/:jobPostingId/edit" element={<JobPostingEdit />} />
             </Routes>
           </BrowserRouter>
         </Layout>

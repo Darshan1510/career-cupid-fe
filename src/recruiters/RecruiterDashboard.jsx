@@ -176,7 +176,6 @@ export default function RecruiterDashboard() {
                 style={{ height: "100%", paddingTop: 7, paddingLeft: 3, justifyContent: "center" }}
                 className="text-center"
               >
-                <CardActionArea component={Link} href={`/job-postings/${jobPosting._id}/shortlist`}>
                   <CardHeader
                     title={jobPosting.title}
                     subheader={
@@ -218,10 +217,7 @@ export default function RecruiterDashboard() {
                       </Typography>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", pt: 1 }}>
-                      <Typography variant="body2">
-                        {" "}
-                        Click to view the Candidates applied for this job
-                      </Typography>
+                      <Link href={`/job-postings/${jobPosting._id}/shortlist`}>Shortlist Applicants</Link>
                     </Box>
                   </CardContent>
                   <CardActions disableSpacing>
@@ -236,7 +232,6 @@ export default function RecruiterDashboard() {
                       <ExpandMoreIcon />
                     </IconButton>
                   </CardActions>
-                </CardActionArea>
                 <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                   <CardContent>
                     <Typography variant="body2" paragraph textAlign="justify">

@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import Container from "@mui/material/Container";
@@ -68,7 +68,7 @@ export default function SeekerEdit() {
     try {
       const seekerResponse = await seekerClient.updateSeekers(seekerFormData);
       const userResponse = await userClient.updateUser(userFormData);
-      if (seekerResponse && userResponse) {
+      if (seekerResponse || userResponse) {
         handleSnackbar("Congratulations, the changes have been saved.", "success");
         setTimeout(() => {
           navigate(`/seekers/${userFormData.username}`);

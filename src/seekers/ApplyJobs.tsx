@@ -17,6 +17,7 @@ import { AuthContext } from "../AuthContext";
 const ApplyJobs = () => {
   const [jobPostings, setJobPostings] = useState([]);
   const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [seeker, setSeeker] = useState<any>(null);
   const user: any = React.useContext(AuthContext);
 
   useEffect(() => {
@@ -27,10 +28,11 @@ const ApplyJobs = () => {
         };
         const queryString = new URLSearchParams(queryParams).toString();
         const seekers: any = await getSeekersByFilter(queryString);
-
+        const seeker: any = seekers[0];
+        setSeeker(seeker);
         try {
           const queryParams = {
-            skills: seekers[0].skills,
+            skills: seeker.skills,
           };
           const queryString = new URLSearchParams(queryParams).toString();
           console.log("Query string:", queryString);
@@ -42,7 +44,7 @@ const ApplyJobs = () => {
       }
     };
     fetchData();
-  }, [user && user._id]);
+  }, [user]);
 
   const handleJobClick = (job: any) => {
     setSelectedJob(job);
@@ -194,7 +196,7 @@ const ApplyJobs = () => {
               </tbody>
             </table>
             {/* Apply button - enabled only if the seeker hasn't applied */}
-            {!selectedJob.applicants.includes(user._id) ? (
+            {!selectedJob.applicants.includes(seeker._id) ? (
               <Button
                 variant="contained"
                 color="primary"

@@ -1,15 +1,15 @@
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Snackbar, Typography } from "@mui/material";
+import MuiAlert from '@mui/material/Alert';
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import commonUtil from "../../utils/commonUtil.js";
+import { useNavigate } from "react-router-dom";
+import Copyright from "../../components/common/Copyright";
 import * as recruiterClient from "../../recruiters/client.ts";
 import * as userClient from "../../users/client.ts";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import { Grid, Box, InputLabel, MenuItem, Select, Button, Typography, FormControl, IconButton, Snackbar } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import Copyright from "../../components/common/Copyright";
-import { useNavigate } from "react-router-dom"; 
-import MuiAlert from '@mui/material/Alert';
+import commonUtil from "../../utils/commonUtil.js";
 
 export default function RecruiterEdit() {
     const navigate = useNavigate();

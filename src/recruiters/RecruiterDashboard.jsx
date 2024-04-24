@@ -68,7 +68,7 @@ export default function RecruiterDashboard() {
 
           if (userResponse && userResponse._id === user_id) {
             const queryParams = {
-              user: user_id,
+              userIds: user_id,
             };
             const queryString = new URLSearchParams(queryParams).toString();
 

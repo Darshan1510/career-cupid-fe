@@ -142,7 +142,7 @@ useEffect(() => {
 
       if (user_id) {
         const recruiterQueryParams = {
-            user: user_id,
+            userIds: user_id,
           };
           const reruiterQueryString = new URLSearchParams(recruiterQueryParams);
 

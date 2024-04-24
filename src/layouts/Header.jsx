@@ -76,9 +76,7 @@ export default function Header() {
     if (!ok) return;
     commonUtil.removeCurrentLogin(userId);
 
-    if (commonUtil.getLoginTokens() && commonUtil.getLoginTokens().length > 0)
-      window.location.reload();
-    else window.location.href = "/signin";
+    window.location.href = "/signin";
   };
 
   const menuId = "primary-search-account-menu";

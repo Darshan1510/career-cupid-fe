@@ -84,7 +84,7 @@ export default function CreateSeeker() {
             const createdSeeker = await createSeeker(updatedFormData);
             if (createdSeeker !== undefined) {
                 handleSnackbar("Seeker profile completion successful!", "success");
-                // TODO: Redirect to the dashboard or next step after successful profile completion
+                window.location.href= "/seekers/dashboard";
             }
         } catch (error) {
             console.error("Error completing seeker profile:", error);

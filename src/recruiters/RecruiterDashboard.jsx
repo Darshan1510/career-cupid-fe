@@ -68,7 +68,7 @@ export default function RecruiterDashboard() {
 
           if (userResponse && userResponse._id === user_id) {
             const queryParams = {
-              user: user_id,
+              userIds: user_id,
             };
             const queryString = new URLSearchParams(queryParams).toString();
 
@@ -165,9 +165,15 @@ export default function RecruiterDashboard() {
             </CardActions>
           </Card>
         </Grid>
-        <Typography sx={{ paddingTop: 2, marginLeft: 1, justifyContent: "center" }} variant="h5">
-          Jobs Posted
-        </Typography>
+        <br />
+        <div className="d-flex" style={{ paddingTop: 2, marginLeft: 1 }}>
+          <Typography variant="h5"> Jobs Posted</Typography>&nbsp;&nbsp;
+          <Box sx={{ flexGrow: 1 }} />
+          <a className="btn btn-primary" href="/job-posting">
+            Post a Job
+          </a>
+        </div>
+
         <Grid container spacing={2} alignItems="left" pt={3}>
           {jobPostingFormData.map((jobPosting, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={4}>

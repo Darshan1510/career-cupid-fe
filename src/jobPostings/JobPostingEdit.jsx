@@ -23,70 +23,66 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Copyright from "../components/common/Copyright";
-import * as recruiterClient from "../recruiters/client";
-import * as userClient from "../users/client";
-import commonUtil from "../utils/commonUtil";
+import * as recruiterClient from "../recruiters/client.ts";
+import commonUtil from "../utils/commonUtil.js";
 import * as client from "./client";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function CreateJobPosting() {
-  let [company, setCompany] = React.useState("");
-  let [title, setTitle] = React.useState("");
-  let [description, setDescription] = React.useState("");
-  let [city, setCity] = React.useState("");
-  let [state, setState] = React.useState("");
-  let [country, setCountry] = React.useState("");
-  let [salary, setSalary] = React.useState(0);
-  let [industry, setIndustry] = React.useState("");
-  let [openings, setOpenings] = React.useState(0);
-  let [remote, setRemote] = React.useState(false);
-  let [hybrid, setHybrid] = React.useState(false);
-  let [fullTime, setFullTime] = React.useState(false);
-  let [skills, setSkills] = React.useState([]);
-  let [experience, setExperience] = React.useState(0);
-  let [recruiterId, setRecruiterId] = React.useState("");
-
+export default function JobPostingsEdit() {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
   const [countries, setCountries] = React.useState([]);
+  const [jobPostingData, setJobPostingData] = React.useState({
+    title: "",
+    description: "",
+    city: "",
+    state: "",
+    country: "",
+    salary: 0,
+    industry: "",
+    openings: 0,
+    remote: false,
+    hybrid: false,
+    fullTime: false,
+    updatedAt: Date.now(),
+    skills: [],
+    experience: 0,
+    _id: "",
+    applicants: [],
+  });
+
+  const industryOptions = [
+    "Automotive",
+    "Education",
+    "Finance",
+    "Healthcare",
+    "Hospitality",
+    "Manufacturing",
+    "Retail",
+    "Real Estate",
+    "Technology",
+  ];
 
   let navigate = useNavigate();
+  const { jobPostingId } = useParams();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    let jobPosting = {
-      company: company,
-      title: title,
-      description: description,
-      city: city,
-      state: state,
-      country: country,
-      salary: salary,
-      industry: industry,
-      openings: openings,
-      remote: remote,
-      hybrid: hybrid,
-      fullTime: fullTime,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      skills: skills,
-      experience: experience,
-      recruiterId: recruiterId,
-    };
-
-    console.log(jobPosting);
-
     try {
-      const response = await client.createJobPosting(jobPosting);
+      jobPostingData._id = jobPostingId;
+
+      const response = await client.updateJobPosting(jobPostingData);
       if (response) {
-        handleSnackbar("Congratulations, the job has been posted.", "success");
-        navigate("/recruiters/dashboard");
+        handleSnackbar("Congratulations, the changes have been saved.", "success");
+        setTimeout(() => {
+          navigate(`/recruiters/dashboard`);
+        }, 1000);
       }
     } catch (error) {
       handleSnackbar("Error posting the job. Please try again.", "error");
@@ -102,18 +98,19 @@ export default function CreateJobPosting() {
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
-  const industryOptions = [
-    "Technology",
-    "Finance",
-    "Healthcare",
-    "Education",
-    "Manufacturing",
-    "Retail",
-    "Real Estate",
-    "Hospitality",
-    "Automotive",
-  ];
 
+  const handleJobPostingChange = (e) => {
+    const { name, value } = e.target;
+  
+    setJobPostingData({
+      ...jobPostingData,
+      [name]: value,
+    });
+  };
+
+  const handleCancel = () => {
+    navigate(`/recruiters/dashboard`);
+  };
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -143,27 +140,43 @@ export default function CreateJobPosting() {
           user_id = Object.keys(key)[0];
         } else {
           console.log("Not enough tokens present in auth");
-          return;
         }
 
         if (user_id) {
-          const userResponse = await userClient.getUserById(user_id);
+          const recruiterQueryParams = {
+            user: user_id,
+          };
+          const reruiterQueryString = new URLSearchParams(recruiterQueryParams);
 
-          if (userResponse && userResponse._id === user_id) {
-            const queryParams = {
-              user: user_id,
-            };
+          let recruiterResponse = await recruiterClient.getRecruitersByFilter(reruiterQueryString);
 
-            const queryString = new URLSearchParams(queryParams).toString();
+          const queryParams = {
+            recruiterIds: recruiterResponse[0]._id,
+            jobPostingIds: jobPostingId,
+          };
 
-            const recruiterResponse = await recruiterClient.getRecruitersByFilter(queryString);
+          const queryString = new URLSearchParams(queryParams);
 
-            if (Array.isArray(recruiterResponse) && recruiterResponse.length > 0) {
-              setRecruiterId(recruiterResponse[0]._id);
-            } else {
-              console.log("Recruiter response is empty or not an array.");
-            }
-          }
+          const jobPostingResponse = await client.getJobPostingsByFilter(queryString);
+
+          setJobPostingData({
+            title: jobPostingResponse[0].title,
+            description: jobPostingResponse[0].description,
+            city: jobPostingResponse[0].city,
+            state: jobPostingResponse[0].state,
+            country: jobPostingResponse[0].country,
+            salary: jobPostingResponse[0].salary,
+            industry: jobPostingResponse[0].industry,
+            openings: jobPostingResponse[0].openings,
+            remote: jobPostingResponse[0].remote,
+            hybrid: jobPostingResponse[0].hybrid,
+            fullTime: jobPostingResponse[0].full_time,
+            updatedAt: Date.now(),
+            skills: jobPostingResponse[0].skills,
+            experience: jobPostingResponse[0].experience,
+            applicants: jobPostingResponse[0].applicants,
+            shortlisted_applicants: jobPostingResponse[0].shortlisted_applicants,
+          });
         }
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -171,7 +184,7 @@ export default function CreateJobPosting() {
     }
 
     fetchData();
-  }, []);
+  }, [jobPostingId]);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
@@ -193,34 +206,21 @@ export default function CreateJobPosting() {
             <Work />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Post a Job
+            Edit
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="Company Name"
-                  required
-                  fullWidth
-                  id="company"
-                  label="Company Name"
-                  autoFocus
-                  value={company || ""}
-                  onChange={(event) => setCompany(event.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="Job Title"
+                  id="jobTitle"
                   label="Job Title"
-                  name="jobTitle"
-                  value={title || ""}
-                  onChange={(event) => setTitle(event.target.value)}
+                  name="title"
+                  value={jobPostingData.title}
+                  onChange={handleJobPostingChange}
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   required
@@ -230,8 +230,8 @@ export default function CreateJobPosting() {
                   id="Job Description"
                   label="Job Description"
                   name="description"
-                  value={description || ""}
-                  onChange={(event) => setDescription(event.target.value)}
+                  value={jobPostingData.description}
+                  onChange={handleJobPostingChange}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -241,8 +241,8 @@ export default function CreateJobPosting() {
                   id="city"
                   label="city"
                   name="city"
-                  value={city || ""}
-                  onChange={(event) => setCity(event.target.value)}
+                  value={jobPostingData.city}
+                  onChange={handleJobPostingChange}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -253,8 +253,8 @@ export default function CreateJobPosting() {
                   label="state"
                   type="state"
                   id="state"
-                  value={state || ""}
-                  onChange={(event) => setState(event.target.value)}
+                  value={jobPostingData.state}
+                  onChange={handleJobPostingChange}
                 />
               </Grid>
 
@@ -264,9 +264,11 @@ export default function CreateJobPosting() {
                   <Select
                     labelId="country-label"
                     id="country"
-                    value={country || ""}
+                    value={jobPostingData.country}
                     label="Country"
-                    onChange={(e) => setCountry(e.target.value)}
+                    onChange={(e) =>
+                      setJobPostingData({ ...jobPostingData, country: e.target.value })
+                    }
                   >
                     {countries.map((country) => (
                       <MenuItem key={country.code} value={country.code}>
@@ -280,9 +282,9 @@ export default function CreateJobPosting() {
                 <Autocomplete
                   id="industry"
                   options={industryOptions}
-                  value={industry}
-                  onChange={(event, newValue) => {
-                    setIndustry(newValue || "");
+                  value={jobPostingData.industry}
+                  onChange={(e) => {
+                    setJobPostingData({ ...jobPostingData, industry: e.target.value });
                   }}
                   renderInput={(params) => <TextField {...params} label="Industry" />}
                 />
@@ -294,8 +296,10 @@ export default function CreateJobPosting() {
                   id="salary"
                   label="Salary"
                   type="number"
-                  value={salary === 0 ? "" : salary}
-                  onChange={(event) => setSalary(Number(event.target.value))}
+                  value={jobPostingData.salary}
+                  onChange={(e) => {
+                    setJobPostingData({ ...jobPostingData, salary: Number(e.target.value) });
+                  }}
                   inputProps={{ min: 0 }}
                 />
               </Grid>
@@ -306,8 +310,10 @@ export default function CreateJobPosting() {
                   id="openings"
                   label="Openings"
                   type="number"
-                  value={openings === 0 ? "" : openings}
-                  onChange={(event) => setOpenings(Number(event.target.value))}
+                  value={jobPostingData.openings}
+                  onChange={(e) => {
+                    setJobPostingData({ ...jobPostingData, openings: Number(e.target.value) });
+                  }}
                   inputProps={{ min: 0 }}
                 />
               </Grid>
@@ -318,8 +324,10 @@ export default function CreateJobPosting() {
                   id="experience"
                   label="Experience (years)"
                   type="number"
-                  value={experience === 0 ? "" : experience}
-                  onChange={(event) => setExperience(Number(event.target.value))}
+                  value={jobPostingData.experience}
+                  onChange={(e) => {
+                    setJobPostingData({ ...jobPostingData, experience: Number(e.target.value) });
+                  }}
                   inputProps={{ min: 0 }}
                 />
               </Grid>
@@ -328,9 +336,13 @@ export default function CreateJobPosting() {
                   required
                   fullWidth
                   id="skills"
-                  label="Skills (comma-separated)"
-                  value={skills.join(",")}
-                  onChange={(event) => setSkills(event.target.value.split(","))}
+                  label="Skills"
+                  value={
+                    Array.isArray(jobPostingData.skills) ? jobPostingData.skills.join(",") : ""
+                  }
+                  onChange={(event) =>
+                    setJobPostingData({ ...jobPostingData, skills: event.target.value.split(",") })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -345,8 +357,13 @@ export default function CreateJobPosting() {
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue={false}
                     name="radio-buttons-group"
-                    value={remote.toString()}
-                    onChange={(event) => setRemote(event.target.value === "true")}
+                    value={jobPostingData.remote.toString()}
+                    onChange={(event) => {
+                      setJobPostingData({
+                        ...jobPostingData,
+                        remote: event.target.value === "true",
+                      });
+                    }}
                   >
                     <FormControlLabel value="false" control={<Radio />} label="No" />
                     <FormControlLabel value="true" control={<Radio />} label="Yes" />
@@ -365,8 +382,13 @@ export default function CreateJobPosting() {
                     aria-labelledby="hybrid-job-label"
                     defaultValue={false}
                     name="hybrid-radio-buttons-group"
-                    value={hybrid.toString()}
-                    onChange={(event) => setHybrid(event.target.value === "true")}
+                    value={jobPostingData.hybrid.toString()}
+                    onChange={(event) => {
+                      setJobPostingData({
+                        ...jobPostingData,
+                        hybrid: event.target.value === "true",
+                      });
+                    }}
                   >
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <FormControlLabel value="false" control={<Radio />} label="No" />
@@ -386,8 +408,13 @@ export default function CreateJobPosting() {
                     aria-labelledby="full-time-job-label"
                     defaultValue={true}
                     name="full-time-radio-buttons-group"
-                    value={fullTime.toString()}
-                    onChange={(event) => setFullTime(event.target.value === "true")}
+                    value={jobPostingData.fullTime.toString()}
+                    onChange={(event) => {
+                      setJobPostingData({
+                        ...jobPostingData,
+                        fullTime: event.target.value === "true",
+                      });
+                    }}
                   >
                     <FormControlLabel value="false" control={<Radio />} label="No" />
                     <FormControlLabel value="true" control={<Radio />} label="Yes" />
@@ -395,9 +422,15 @@ export default function CreateJobPosting() {
                 </FormControl>
               </Grid>
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Submit
-            </Button>
+            <Box sx={{ display: "flex", marginTop: 3 }}>
+              <Button type="submit" variant="contained" sx={{ mr: 3, ml: 13 }}>
+                Save
+              </Button>
+
+              <Button color="error" variant="contained" onClick={handleCancel}>
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />

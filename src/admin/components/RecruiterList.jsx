@@ -1,8 +1,7 @@
+import { Avatar, Card, CardContent, Typography } from "@mui/material";
+import React from "react";
 import * as recruiterClient from "../../recruiters/client";
 import * as userClient from "../../users/client";
-import React from "react";
-import { Card, CardContent, Typography, Avatar } from "@mui/material";
-import { on } from "events";
 
 export default function RecruiterList() {
   let [recruiters, setRecruiters] = React.useState([]);
@@ -46,6 +45,12 @@ export default function RecruiterList() {
   const onApprove = async (recruiter) => {
     let updatedRecruiter = await recruiterClient.approveRecruiter(recruiter._id);
     if (updatedRecruiter) {
+      let users = await userClient.getUsersByFilter(
+        new URLSearchParams(`userIds=${updatedRecruiter.user}`)
+      );
+      let user = users[0];
+      updatedRecruiter = { ...updatedRecruiter, ...user };
+      delete user._id;
       let updatedRecruiters = recruiters.map((recruiter) => {
         return recruiter._id === updatedRecruiter._id ? updatedRecruiter : recruiter;
       });

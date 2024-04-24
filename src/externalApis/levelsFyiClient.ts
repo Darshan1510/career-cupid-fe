@@ -15,10 +15,10 @@ const TOP_COMPANIES =
 const COMPANY_SEARCH = "https://api.levels.fyi/v2/search/entity/company";
 const JOB_SEARCH = "https://api.levels.fyi/v1/job/search";
 const SALARY_DATA_TEMPLATE = `https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/companies/{{COMPANY_SLUG}}/salaries.json`;
-const LOCATION_DATA = "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/locations.json";
-const TITLE_DATA = "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/t.json";
-const INDIVIDUAL_TITAL_DATA =
-  "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/t/{{JOB_TITLE}}.json";
+//const LOCATION_DATA = "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/locations.json";
+//const TITLE_DATA = "https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/t.json";
+//const INDIVIDUAL_TITAL_DATA =
+//"https://www.levels.fyi/_next/data/dOB9gm4vLf6jxolu0SqnV/t/{{JOB_TITLE}}.json";
 
 export const getSalaryDataURL = (providedSlug: string) => {
   // Replace the placeholder with the provided slug

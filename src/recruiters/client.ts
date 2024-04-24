@@ -53,20 +53,3 @@ export const approveRecruiter = async (recruiterId: any) => {
   const response = await commonUtil.httpRequest(url, method, {}, {});
   return response;
 };
-
-// Get a list of seekers who have applied for the job posted by the currently logged in recruiter
-export const getSeekers = async () => {
-  let method = "GET";
-  let url = `${API_URL}/seekers`;
-  const response = await commonUtil.httpRequest(url, method, {}, {});
-  return response;
-};
-
-export const shortlistSeeker = async (seekerId: any) => {
-  let method = "POST";
-  // TODO: This is a dummy jobId. Replace it with the actual jobId
-  const jobId = "6627afcefa8b378bca53245b";
-  let url = `${API_URL}/jobPostings/${jobId}/shortlistApplicant`;
-  const response = await commonUtil.httpRequest(url, method, {}, { applicantId: seekerId });
-  return response;
-};

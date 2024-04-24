@@ -49,7 +49,6 @@ export default function CreateJobPosting() {
   let [skills, setSkills] = React.useState([]);
   let [experience, setExperience] = React.useState(0);
   let [recruiterId, setRecruiterId] = React.useState("");
-  let [recruiterCompany, setRecruiterCompany] = React.useState("");
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState("");

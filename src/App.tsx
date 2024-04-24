@@ -24,7 +24,6 @@ import RecruiterDashboard from "./recruiters/RecruiterDashboard";
 import SeekerDashboard from "./seekers/SeekerDashboard";
 import ApplyJobs from "./seekers/ApplyJobs";
 import ShortlistCandidates from "./recruiters/ShortlistCandidates";
-import JobPostingsEdit from "./jobPostings/JobPostingEdit";
 import JobPostingEdit from "./jobPostings/JobPostingEdit";
 
 function App() {

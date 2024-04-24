@@ -13,7 +13,7 @@ import CreateRecruiter from "./recruiters/CreateRecruiter";
 import CreateSeeker from "./seekers/CreateSeeker";
 import SeekJobs from "./seekers/SeekJobs";
 import CreateJobPosting from "./jobPostings/jobPosting";
-import ReviewApplications from "./recruiters/ReviewApplications";
+// import ReviewApplications from "./recruiters/ReviewApplications";
 import { AuthContext, AuthProvider } from "./AuthContext";
 import SignUpConfirmPage from "./users/pages/SignUpConfirmPage";
 import RecruiterEdit from "./public/components/RecruiterEdit";
@@ -65,9 +65,9 @@ function App() {
               <Route path="/seek-jobs" element={<SeekJobs />} />
               <Route path="/recruiters/dashboard" element={<RecruiterDashboard />} />
               <Route path="/seekers/dashboard" element={<SeekerDashboard />} />
-              <Route path="/review-applications" element={<ReviewApplications />} />
+              {/* <Route path="/review-applications" element={<ReviewApplications />} /> */}
               <Route path="/apply-jobs" element={<ApplyJobs />} />
-              <Route path="/shortlist-candidates" element={<ShortlistCandidates />} />
+              <Route path="/job-postings/:jobPostingId/shortlist" element={<ShortlistCandidates />} />
             </Routes>
           </BrowserRouter>
         </Layout>

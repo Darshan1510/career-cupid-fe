@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
-import { getJobPostings } from "./client";
+import { getAllJobPostings } from "../jobPostings/client";
 
 function JobPostingCard() {
     const [jobPostings, setJobPostings] = useState([]);
@@ -21,7 +21,7 @@ function JobPostingCard() {
         // Fetch data from API
         const fetchData = async () => {
             try {
-                const jobPostings = await getJobPostings();
+                const jobPostings = await getAllJobPostings();
                 setJobPostings(jobPostings);
                 setCurrentIndex(jobPostings.length - 1);
             } catch (error) {

@@ -6,27 +6,15 @@ import * as jobPostingClient from "../jobPostings/client.ts";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Container from "@mui/material/Container";
-import {
-  Grid,
-  Box,
-  Typography,
-  Avatar,
-  Card,
-  CardContent,
-  Chip,
-  CardHeader,
-  Link,
-  IconButton,
-  CardActions,
-} from "@mui/material";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Collapse from "@mui/material/Collapse";
+import { Grid, Box, Typography, Avatar, Card, CardActionArea, CardContent, Chip, CardHeader, Link, IconButton, CardActions } from "@mui/material";
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
 
 export default function RecruiterDashboard() {
   const defaultTheme = createTheme();
@@ -40,14 +28,15 @@ export default function RecruiterDashboard() {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
   })(({ theme, expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.shortest,
     }),
   }));
 
   const handleExpandClick = (index) => {
+
     const newExpanded = [...expanded];
     newExpanded[index] = !newExpanded[index];
     setExpanded(newExpanded);
@@ -73,29 +62,23 @@ export default function RecruiterDashboard() {
 
           if (userResponse && userResponse._id === user_id) {
             const queryParams = {
-              userIds: user_id,
+              user: user_id,
             };
             const queryString = new URLSearchParams(queryParams).toString();
 
             let recruiterResponse = await recruiterClient.getRecruitersByFilter(queryString);
-
-            if (recruiterResponse.length === 0) {
-              window.location.href = "/create-recruiter";
-            }
 
             setRecruiterData(recruiterResponse[0]);
             setFirstName(userResponse.firstname);
             setLastName(userResponse.lastname);
 
             const jobQueryParams = {
-              recruiterIds: recruiterResponse[0]._id,
+              recruiterIds: recruiterResponse[0]._id
             };
             console.log("jobQueryParam", jobQueryParams);
             const jobPostingQueryString = new URLSearchParams(jobQueryParams);
 
-            let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(
-              jobPostingQueryString
-            );
+            let jobPostingResponse = await jobPostingClient.getJobPostingsByFilter(jobPostingQueryString);
             setJobPostingFormData(jobPostingResponse);
             console.log(jobPostingResponse);
             setExpanded(new Array(jobPostingResponse.length).fill(false));
@@ -111,7 +94,7 @@ export default function RecruiterDashboard() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="lg" className="mt-2">
+      <Container component="main" maxWidth="lg">
         <CssBaseline />
         {/* <Grid container spacing={2} alignItems="center" pt={5}> */}
         <Grid item xs={12} sm={6} md={4} lg={4}>
@@ -120,43 +103,26 @@ export default function RecruiterDashboard() {
               sx={{ height: "120px", width: "120px", margin: "auto" }}
               src={recruiterData && recruiterData.profile_picture}
             />
-            <CardContent className="text-center">
+            <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 {firstName} {lastName}
               </Typography>
-              <Typography color="text.secondary">
-                Recruiter at {recruiterData && recruiterData.company}
-              </Typography>
-              <Box sx={{ display: "flex", alignItems: "center", pt: 3, justifyContent: "center" }}>
-                <LocationOnOutlinedIcon
-                  color="secondary"
-                  fontSize="small"
-                  sx={{ marginRight: 1 }}
-                />
-                <Typography variant="body2">
-                  {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state},{" "}
-                  {recruiterData && recruiterData.country}
+              <Typography color="text.secondary">Recruiter at {recruiterData && recruiterData.company}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
+                <LocationOnOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
+                <Typography variant="body2" >
+                  {recruiterData && recruiterData.city}, {recruiterData && recruiterData.state}, {recruiterData && recruiterData.country}
                 </Typography>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", pt: 2, justifyContent: "center" }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
                 <EmailOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                <Link
-                  href={`mailto:${recruiterData && recruiterData.email}`}
-                  color="inherit"
-                  underline="hover"
-                >
+                <Link href={`mailto:${recruiterData && recruiterData.email}`} color="inherit" underline="hover">
                   {recruiterData && recruiterData.email}
                 </Link>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", pt: 2, justifyContent: "center" }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
                 <LanguageOutlinedIcon color="secondary" fontSize="small" sx={{ marginRight: 1 }} />
-                <Link
-                  href={recruiterData && recruiterData.website}
-                  color="inherit"
-                  underline="hover"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={recruiterData && recruiterData.website} color="inherit" underline="hover" target="_blank" rel="noopener noreferrer">
                   {recruiterData && recruiterData.website}
                 </Link>
               </Box>
@@ -168,76 +134,49 @@ export default function RecruiterDashboard() {
             </CardActions>
           </Card>
         </Grid>
-        <br/>
-        <div className="d-flex" style={{ paddingTop: 2, marginLeft: 1 }}>
-          <Typography variant="h5">Jobs Posted</Typography>&nbsp;&nbsp;
-          <Box sx={{ flexGrow: 1 }} />
-          <a className="btn btn-primary" href="/job-posting">
-            Post a Job
-          </a>
-        </div>
+        <Typography sx={{ paddingTop: 2, marginLeft: 1 }} variant="h5">Jobs Posted</Typography>
         <Grid container spacing={2} alignItems="left" pt={3}>
           {jobPostingFormData.map((jobPosting, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
-              <Card raised={true} style={{  paddingTop: 7, paddingLeft: 3 }}>
-                <CardHeader
-                  title={jobPosting.title}
-                  subheader={jobPosting.city + ", " + jobPosting.state + ", " + jobPosting.country}
-                />
-                <CardContent sx={{ paddingLeft: 1, paddingTop: 0 }}>
-                  <Chip
-                    icon={<LocalAtmIcon />}
-                    size="small"
-                    label={jobPosting.salary}
-                    color="success"
-                  />
-                  {jobPosting.full_time && (
-                    <Chip
-                      icon={<WorkOutlineIcon />}
-                      sx={{ marginLeft: 1 }}
-                      color="primary"
-                      size="small"
-                      label="Full Time"
-                    />
-                  )}
-                  {jobPosting.remote && (
-                    <Chip sx={{ marginLeft: 1 }} color="warning" size="small" label="Remote" />
-                  )}
-                  {jobPosting.hybrid && (
-                    <Chip sx={{ marginLeft: 1 }} color="default" size="small" label="Hybrid" />
-                  )}
-                  <Box sx={{ display: "flex", alignItems: "center", pt: 3 }}>
-                    <Typography variant="body2">
-                      {" "}
-                      <strong>Openings:</strong> {jobPosting.openings}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", pt: 1 }}>
-                    <Typography variant="body2">
-                      {" "}
-                      <strong>Experience: </strong> {jobPosting.experience} years
-                    </Typography>
-                  </Box>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton href="/">
-                    <EditNoteOutlinedIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleExpandClick(index)}
-                    aria-expanded={expanded[index]}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </CardActions>
+              <Card raised={true} style={{ height: "100%", paddingTop: 7, paddingLeft: 3 }}>
+                <CardActionArea component={Link} href={`/job-postings/${jobPosting._id}/shortlist`}>
+                  <CardHeader title={jobPosting.title} subheader={jobPosting.city + ', ' + jobPosting.state + ', ' + jobPosting.country} />
+                  <CardContent sx={{ paddingLeft: 1, paddingTop: 0 }}>
+                    <Chip icon={<LocalAtmIcon />} size="small" label={jobPosting.salary} color="success" />
+                    {jobPosting.full_time && (
+                      <Chip icon={<WorkOutlineIcon />} sx={{ marginLeft: 1 }} color="primary" size="small" label="Full Time" />
+                    )}
+                    {jobPosting.remote && (
+                      <Chip sx={{ marginLeft: 1 }} color="warning" size="small" label="Remote" />
+                    )}
+                    {jobPosting.hybrid && (
+                      <Chip sx={{ marginLeft: 1 }} color="default" size="small" label="Hybrid" />
+                    )}
+                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 3 }}>
+                      <Typography variant="body2" > <strong>Openings:</strong> {jobPosting.openings}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
+                      <Typography variant="body2"> <strong>Experience: </strong> {jobPosting.experience} years
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <IconButton href="/">
+                      <EditNoteOutlinedIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleExpandClick(index)} aria-expanded={expanded[index]} aria-label="show more">
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+                </CardActionArea>
                 <Collapse in={expanded[index]} timeout="auto" unmountOnExit>
                   <CardContent>
                     <Typography variant="body2" paragraph textAlign="justify">
                       <strong>Description:</strong> {jobPosting.description}
                     </Typography>
                     <Typography variant="body2" paragraph textAlign="justify">
-                      <strong>Skills:</strong> {jobPosting.skills.join(",")}
+                      <strong>Skills:</strong> {jobPosting.skills.join(',')}
                     </Typography>
                   </CardContent>
                 </Collapse>

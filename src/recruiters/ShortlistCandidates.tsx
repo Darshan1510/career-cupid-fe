@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { shortlistSeeker, getSeekers } from "./client";
+import { shortlistSeeker } from "./client";
+import { getSeekersByFilter } from "../seekers/client";
 import * as userClient from "../users/client";
 import {
   List,
@@ -12,16 +13,25 @@ import {
   Avatar,
   Chip,
 } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { getJobPostingById } from "../jobPostings/client";
 
 const ShortlistCandidates = () => {
   const [seekers, setSeekers] = useState([]);
   const [selectedSeeker, setSelectedSeeker] = useState<any>(null);
+  const [lastJob, setLastJob] = useState<any>(null);
+  const { jobPostingId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const seekersData: any = await getSeekers();
+        const job: any = await getJobPostingById(String(jobPostingId));
+        console.log("Job posting:", job)
+        setLastJob(job);
+        const seekersData: any = await getSeekersByFilter(new URLSearchParams(`seekerIds=${job.applicants}`));
+        console.log("Seekers data:", seekersData);
         const userIds = seekersData.map((seeker: any) => seeker.user);
+        console.log("User IDs:", userIds);
         const users: any = await userClient.getUsersByFilter(
           new URLSearchParams(`userIds=${userIds.join(",")}`)
         );
@@ -38,15 +48,18 @@ const ShortlistCandidates = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [jobPostingId]);
 
   const handleJobClick = (job: any) => {
     setSelectedSeeker(job);
   };
 
-  const handleShortlistClick = () => {
+  const handleShortlistClick = async () => {
     // console.log("Shortlisting for job:", selectedSeeker);
-    shortlistSeeker(selectedSeeker._id);
+    const response: any = await shortlistSeeker(selectedSeeker._id);
+    if (response) {
+      setLastJob(response);
+    }
     alert("Shortlisted the selected candidate!");
   };
 
@@ -159,14 +172,23 @@ const ShortlistCandidates = () => {
               </tbody>
             </table>
 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleShortlistClick}
-              style={{ marginTop: 20 }}
-            >
-              Shortlist
-            </Button>
+            {/* Shortlist button - enabled only if the seeker hasn't been shortlisted */}
+            {lastJob && !lastJob.shortlisted_applicants.includes(selectedSeeker._id) ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleShortlistClick}
+                style={{ marginTop: 20, textTransform: "none" }}
+                disableElevation
+              >
+                Shortlist
+              </Button>) : <button
+                className="btn btn-primary btn-outlined"
+                disabled
+                style={{ marginTop: 20 }}
+              >
+              Shortlisted
+            </button>}
           </Paper>
         )}
       </div>
